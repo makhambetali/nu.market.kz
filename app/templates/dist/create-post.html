@@ -1,0 +1,136 @@
+{% load static tailwind_tags %} {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    {% tailwind_css %}
+    <link rel="stylesheet" href="{% static 'css/output.css' %}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-100 font-inter text-zinc-600">
+    <div class="w-full bg-white shadow">
+      <div class="mx-auto flex w-[1170px] items-center justify-between py-3">
+        <label class="relative w-[181.66px]">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="pointer-events-none absolute right-3 top-1/2 size-6 -translate-y-1/2 transform"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+            />
+          </svg>
+          <input
+            type="text"
+            placeholder="Search"
+            class="w-[181.6px] rounded bg-zinc-200 px-3 py-[5px] placeholder:text-zinc-600 focus-visible:outline-none"
+          />
+        </label>
+
+        <div>NU Market</div>
+      </div>
+    </div>
+
+    <div class="mx-auto mt-2 grid max-w-[1170px] grid-cols-6 gap-4">
+      <!-- menu button -->
+      <div class="flex h-full max-h-96 flex-col gap-1">
+        <a class="menu_button">My Account</a>
+        <a class="menu_button">Marketplace</a>
+        <a class="menu_button">Message</a>
+        <a class="menu_button">Liked</a>
+        <hr />
+        <a class="menu_button" href="{% url 'app:create-post' %}">Create</a>
+        <hr />
+        <a class="menu_button">Log Out</a>
+      </div>
+
+      <!-- col span 2 -->
+      <div class="col-span-4 flex flex-col gap-2.5">
+        <!-- grid layout -->
+        <div class="bg-white flex flex-col rounded-lg p-3">
+          <span class="text-black text-lg">Describe in details</span>
+          <span class="text-sm">Title*</span>
+          {{form.title}}
+          <span class="text-sm">Category</span>
+        </div>
+
+        <div class="bg-white flex flex-col rounded-lg p-4">
+          <span class="text-black text-lg">Choose Photo</span>
+          <span class="text-sm">Photo*</span>
+          <div class="grid grid-cols-4 gap-2">
+            <label
+              for="photo_upload"
+              class="bg-zinc-300 px-4 py-10 cursor-pointer hover:underline rounded-lg text-center"
+              >Add photo</label
+            >
+            <label
+              for="photo_upload"
+              class="bg-zinc-300 px-4 py-10 cursor-pointer hover:underline rounded-lg text-center"
+              >Add photo</label
+            >
+            <label
+              for="photo_upload"
+              class="bg-zinc-300 px-4 py-10 cursor-pointer hover:underline rounded-lg text-center"
+              >Add photo</label
+            >
+            <label
+              for="photo_upload"
+              class="bg-zinc-300 px-4 py-10 cursor-pointer hover:underline rounded-lg text-center"
+              >Add photo</label
+            >
+            <label
+              for="photo_upload"
+              class="bg-zinc-300 px-4 py-10 cursor-pointer hover:underline rounded-lg text-center"
+              >Add photo</label
+            >
+            <label
+              for="photo_upload"
+              class="bg-zinc-300 px-4 py-10 cursor-pointer hover:underline rounded-lg text-center"
+              >Add photo</label
+            >
+            <input type="file" name="" id="photo_upload" class="w-0" />
+          </div>
+          <span class="text-sm">Category</span>
+        </div>
+      </div>
+
+      <!-- col span 3  -->
+
+      <div
+        class="col-span-1 flex h-[560px] flex-col items-center justify-center rounded-xl bg-white shadow-md"
+      ></div>
+    </div>
+    <script>
+      window.addEventListener("load", function () {
+        document.querySelectorAll(".currency-text").forEach((each) => {
+          each.innerHTML = Intl.NumberFormat("de-DE", {
+            style: "currency",
+            currency: "KZT",
+            maximumSignificantDigits: 10,
+          }).format(each.innerHTML);
+        });
+      });
+      function formatCurrency(value) {
+        return Intl.NumberFormat("de-DE", {
+          style: "currency",
+          currency: "KZT",
+          maximumSignificantDigits: 3,
+        }).format(value);
+      }
+
+      window.formatCurrency = formatCurrency;
+    </script>
+  </body>
+</html>
