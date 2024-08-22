@@ -1,0 +1,107 @@
+{% extends 'dist/main.html' %} {% block content %}
+
+<section class="container mx-auto my-10">
+	<div class="mx-auto max-w-3xl rounded-lg bg-white p-8 shadow-lg">
+		<h2 class="mb-8 text-center text-3xl font-bold">Your Profile</h2>
+
+		<!-- Profile Picture -->
+		<div class="mb-6 flex justify-center">
+			<img
+				src="profile-pic.jpg"
+				alt="Profile Picture"
+				class="h-32 w-32 rounded-full shadow-md"
+			/>
+		</div>
+
+		<!-- Profile Information Form -->
+		<form action="#" method="POST">
+			<!-- Name -->
+			<div class="mb-4">
+				<label class="mb-2 block font-bold text-gray-700" for="name"
+					>Full Name</label
+				>
+				<input
+					class="w-full rounded-lg border px-3 py-2 focus:border-blue-500 focus:outline-none"
+					type="text"
+					id="name"
+					name="name"
+					placeholder="Enter your full name"
+					value="John Doe"
+					required
+				/>
+			</div>
+
+			<!-- Email -->
+			<div class="mb-4">
+				<label class="mb-2 block font-bold text-gray-700" for="email"
+					>Email</label
+				>
+				<input
+					class="w-full rounded-lg border px-3 py-2 focus:border-blue-500 focus:outline-none"
+					type="email"
+					id="email"
+					name="email"
+					placeholder="Enter your email"
+					value="johndoe@example.com"
+					required
+				/>
+			</div>
+
+			<!-- Phone -->
+			<div class="mb-4">
+				<label class="mb-2 block font-bold text-gray-700" for="phone"
+					>Phone Number</label
+				>
+				<input
+					class="w-full rounded-lg border px-3 py-2 focus:border-blue-500 focus:outline-none"
+					type="text"
+					id="phone"
+					name="phone"
+					placeholder="Enter your phone number"
+					value="+123 456 7890"
+					required
+				/>
+			</div>
+
+			<!-- Password -->
+			<div class="mb-4">
+				<label class="mb-2 block font-bold text-gray-700" for="password"
+					>Password</label
+				>
+				<input
+					class="w-full rounded-lg border px-3 py-2 focus:border-blue-500 focus:outline-none"
+					type="password"
+					id="password"
+					name="password"
+					placeholder="Enter a new password"
+				/>
+			</div>
+
+			<!-- Profile Picture Upload -->
+			<div class="mb-4">
+				<label
+					class="mb-2 block font-bold text-gray-700"
+					for="profile-pic"
+					>Profile Picture</label
+				>
+				<input
+					class="w-full rounded-lg border px-3 py-2 focus:border-blue-500 focus:outline-none"
+					type="file"
+					id="profile-pic"
+					name="profile-pic"
+					accept="image/*"
+				/>
+			</div>
+
+			<!-- Submit Button -->
+			<div class="text-center">
+				<button
+					class="rounded-lg bg-blue-600 px-6 py-3 font-bold text-white"
+				>
+					Update Profile
+				</button>
+			</div>
+		</form>
+	</div>
+</section>
+{% endblock content %}

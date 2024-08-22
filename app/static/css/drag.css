@@ -1,0 +1,53 @@
+body {
+    font-family: sans-serif;
+  }
+  
+  .columns {
+    margin: 0 auto;
+    background: lightgrey;
+    /* width: 800px; */
+    width: 100%;
+    padding: 20px;
+  }
+  
+  .card {
+    width: 32%;
+    display: inline-block;
+    margin-right: 1.2%;
+    height: 120px;
+    font-size: 50px;
+    /* background: deeppink;
+    border: 3px solid deeppink; */
+    box-sizing: border-box;
+    color: white;
+    line-height: 120px;
+    vertical-align: middle;
+    text-align: center;
+  }
+  
+  .card:last-child {
+    margin-right: 0;
+  }
+  
+  /* .card:nth-child(2) {
+    background: dodgerblue;
+    border-color: dodgerblue;
+  }
+  
+  .card:nth-child(3) {
+    background: darkturquoise;
+    border-color: darkturquoise;
+  } */
+  
+  .card.dragging {
+    opacity: 0.5;
+  }
+  
+  .card.over {
+    border: 3px dashed black;
+  }
+  
+  [draggable] {
+    user-select: none;
+  }
+  

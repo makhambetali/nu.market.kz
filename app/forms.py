@@ -10,3 +10,10 @@ class PostForm(forms.ModelForm):
             'price': forms.TextInput(attrs={'oninput':'length_slice(this, 9)', 'class': 'currency-input'})
 
         }
+# class PostImageForm(forms.ModelForm):
+#     class Meta:
+#         model = PostImage
+#         fields = ['image']
+#         widgets = {
+#             'image': forms.ClearableFileInput(attrs={'multiple': True}),
+#         }

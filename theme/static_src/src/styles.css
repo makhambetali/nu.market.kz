@@ -1,3 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.menu_button {
+  @apply rounded px-3 py-[5px] text-left hover:bg-zinc-200 focus:bg-gray-300 focus:text-zinc-950;
+}

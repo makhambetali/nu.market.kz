@@ -1,0 +1,55 @@
+{% load static tailwind_tags %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		{% tailwind_css %}
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			.dropdown-menu {
+				display: none;
+			}
+
+			.dropdown-menu.show {
+				display: block;
+			}
+		</style>
+
+		<script
+			src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"
+			defer
+		></script>
+	</head>
+	<body class="font-inter bg-gray-100 text-gray-900">
+		{% include 'dist/header.html' %} {% block content %} {% endblock %}
+		<script>
+			// JavaScript to toggle the dropdown menu
+			document
+				.getElementById("dropdownButton")
+				.addEventListener("click", function () {
+					var dropdownMenu = document.getElementById("dropdownMenu");
+					dropdownMenu.classList.toggle("show");
+				});
+
+			// Optional: Close dropdown if clicked outside
+			window.addEventListener("click", function (e) {
+				var dropdownButton = document.getElementById("dropdownButton");
+				var dropdownMenu = document.getElementById("dropdownMenu");
+				if (!dropdownButton.contains(e.target)) {
+					dropdownMenu.classList.remove("show");
+				}
+			});
+		</script>
+		  <script src="{% static 'js/imask.js'%}"></script>
+		  {% block sources %}
+		  {% endblock sources %}
+	</body>
+</html>
