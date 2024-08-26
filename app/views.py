@@ -87,8 +87,7 @@ class CreatePost(LoginRequiredMixin, CreateView):
             price = request.POST.get('price')
             form.price = str_to_int(price)
             
-            if not form.slug:
-                form.slug = slugify(form.title)
+       
             form.save()
             images = self.request.FILES.getlist('files')
             for index in range(len(images)):
