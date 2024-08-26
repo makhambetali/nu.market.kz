@@ -89,7 +89,7 @@
 					>Phone Number</label
 				>
 				<input
-					class="w-full rounded-lg border px-3 py-2 focus:border-blue-500 focus:outline-none"
+					class="w-full rounded-lg border px-3 py-2 focus:border-blue-500 focus:outline-none contact_number"
 					type="text"
 					id="phone"
 					name="phone"
@@ -125,6 +125,19 @@ document.querySelector('.img_part').addEventListener('click', function () {
   document.getElementById('id_image').click();
 	// alert()
 });
+IMask(
+    document.querySelector('.contact_number'),
+    {
+        mask: '+7(000)000-00-00'  ,
+      blocks: {
+        num: {
+          // nested masks are available!
+          mask: Number,
+          thousandsSeparator: '.'
+        }
+      }
+    }
+  )
 
 </script>
 {% endblock externals %}

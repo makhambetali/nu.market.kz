@@ -15,22 +15,8 @@ from django.http import JsonResponse
 from django.db.models import Max,Min,Q
 def str_to_int(string):
     return int(''.join(filter(str.isdigit, string)))
-# Create your views here.
-# @login_required
-# def homePage(request):
-    
-#     return render(request, 'dist/index.html')
-
-def MessagePage(request):
-    return render(request, 'dist/message.html')
 
 
-
-
-
-
-category_cache = 0
-cache =[]
 class HomePageView(LoginRequiredMixin, ListView):
     model = Post
     template_name = 'dist/home.html'
@@ -52,8 +38,9 @@ class HomePageView(LoginRequiredMixin, ListView):
         self.max_dot = queryset.aggregate(Max("price"))['price__max']
 
         previous_category = self.request.GET.get('previous_category')
+        previous_condition = self.request.GET.get('previous_condition')
         # Если категория изменилась, сбрасываем min_price и max_price
-        if category and category != previous_category:
+        if (category and category != previous_category) or (condition and condition != previous_condition):
             self.min_price = self.min_dot
             self.max_price = self.max_dot
         else:
@@ -81,6 +68,7 @@ class HomePageView(LoginRequiredMixin, ListView):
         context['max_dot'] = self.max_dot
         context['categories'] = Category.objects.all()
         context['previous_category'] = context['category']
+        context['previous_condition'] = context['condition']
         return context
 
 
@@ -98,7 +86,8 @@ class CreatePost(LoginRequiredMixin, CreateView):
             form.creator = request.user
             price = request.POST.get('price')
             form.price = str_to_int(price)
-            
+            if not form.slug:
+                form.slug = slugify(form.title)
             form.save()
             images = self.request.FILES.getlist('files')
             for index in range(len(images)):

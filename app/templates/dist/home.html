@@ -22,6 +22,7 @@
 				<div class="form-group">
 					<label for="category">Категория:</label>
 					<input type="hidden" name="previous_category" value="{{ category }}">
+					<input type="hidden" name="previous_condition" value="{{ condition }}">
 					<select name="category" id="category" class="form-control">
 						<option value="" {% if not request.GET.category %}selected{% endif %}>Все категории</option>
 						<!-- <option value="books" {% if request.GET.category == 'books' %}selected{% endif %}>Книги</option>
@@ -49,14 +50,15 @@
 					</select>
 				</div>
 			
+				{% if posts_count != 0 %}
 				<div class="mt-4 flex items-center justify-center">
 					<div
 						x-data="range()"
 						x-init="mintrigger(); maxtrigger()"
 						class="relative w-full max-w-xl"
 					>
-
-				<!-- <p>Prev: {{previous_category}}</p>
+<!-- 
+				<p>Prev: {{previous_category}}</p>
 				<p>Min Dot: {{min_dot}}</p>
 				<p>Max Dot: {{max_dot}}</p>
 				<p>Min Price of posts: {{min_price}}</p>
@@ -164,6 +166,7 @@
 						}
 					</script>
 				</div>
+				{% endif %}
 			
 				<button type="submit" class="btn btn-primary">Фильтровать</button>
 			</form>
@@ -177,7 +180,7 @@
 			<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 container-ajax">
 				<!-- Product Card -->
 				 {% for post in posts %}
-				 <div class="overflow-hidden rounded-md bg-white shadow-md cursor-pointer relative card" onclick="redirectTo('{{post.id}}')">
+				 <div class="overflow-hidden rounded-md bg-white shadow-md cursor-pointer relative card" onclick="redirectTo('{{post.slug}}')">
 					<img src="{{post.images.first.image.url}}" alt="Product Image" class="h-48 w-full object-cover" />
                             <div class="p-5 pt-3.5">
                                 <div class="flex items-center justify-between gap-2">
@@ -207,23 +210,24 @@
                             </div>
 				 </div>
 				 {% endfor %}
-				 <div class="pagination">
-    <div class="step-links">
-        {% if page_obj.has_previous %}
-            <a href="?{% if category %}category={{ category }}&{% endif %}{% if condition %}condition={{ condition }}&{% endif %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}page=1">&laquo; первая</a>
-            <a href="?{% if category %}category={{ category }}&{% endif %}{% if condition %}condition={{ condition }}&{% endif %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}page={{ page_obj.previous_page_number }}">предыдущая</a>
-        {% endif %}
-
-        <p class="current">
-            Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.
-        </p>
-
-        {% if page_obj.has_next %}
-            <a href="?{% if category %}category={{ category }}&{% endif %}{% if condition %}condition={{ condition }}&{% endif %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}page={{ page_obj.next_page_number }}">следующая</a>
-            <a href="?{% if category %}category={{ category }}&{% endif %}{% if condition %}condition={{ condition }}&{% endif %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}page={{ page_obj.paginator.num_pages }}">последняя &raquo;</a>
-        {% endif %}
-    </div>
-</div>
+				{% if posts_count != 0 %} <div class="pagination">
+					<div class="step-links">
+						{% if page_obj.has_previous %}
+							<a href="?{% if category %}category={{ category }}&{% endif %}{% if condition %}condition={{ condition }}&{% endif %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}page=1">&laquo; первая</a>
+							<a href="?{% if category %}category={{ category }}&{% endif %}{% if condition %}condition={{ condition }}&{% endif %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}page={{ page_obj.previous_page_number }}">предыдущая</a>
+						{% endif %}
+				
+						<p class="current">
+							Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.
+						</p>
+				
+						{% if page_obj.has_next %}
+							<a href="?{% if category %}category={{ category }}&{% endif %}{% if condition %}condition={{ condition }}&{% endif %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}page={{ page_obj.next_page_number }}">следующая</a>
+							<a href="?{% if category %}category={{ category }}&{% endif %}{% if condition %}condition={{ condition }}&{% endif %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}page={{ page_obj.paginator.num_pages }}">последняя &raquo;</a>
+						{% endif %}
+					</div>
+				</div>
+				{% endif %}
 
 			</div>
 		</div>

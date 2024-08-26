@@ -7,7 +7,7 @@
 		<!-- Item 1 -->
 		
 		{% for fav_post in fav_posts %}
-		<div class="bg-white p-6 rounded-lg shadow-lg card" post_id = "{{fav_post.post.id}}" onclick="redirectTo('{{fav_post.post.id}}')">
+		<div class="bg-white p-6 rounded-lg shadow-lg card" post_id = "{{fav_post.post.id}}" onclick="redirectTo('{{fav_post.post.slug}}')">
 			<img
 				src="/media/{{fav_post.post.images.first.image}}"
 				alt="Item 1"
