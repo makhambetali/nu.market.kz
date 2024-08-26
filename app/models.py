@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
+from django.utils.crypto import get_random_string
 # Create your models here.
 
 class Category(models.Model):
@@ -38,7 +39,9 @@ class Post(models.Model):
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL", blank=True, null=True)
     def __str__(self):
         return f'{self.title} - {self.price}'
-   
+    def save(self, *args, **kwargs):
+        self.slug = slugify(f'{self.title}-{get_random_string(length=4)}')
+        super(Post, self).save(*args, **kwargs)
   
 class PostImage(models.Model):
     post = models.ForeignKey(

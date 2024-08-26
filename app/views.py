@@ -86,6 +86,7 @@ class CreatePost(LoginRequiredMixin, CreateView):
             form.creator = request.user
             price = request.POST.get('price')
             form.price = str_to_int(price)
+            
             if not form.slug:
                 form.slug = slugify(form.title)
             form.save()
@@ -124,6 +125,10 @@ class EditPost(LoginRequiredMixin, UpdateView):
             f'Пост успешно изменен.'
         )
         return super().form_valid(form)
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        context['page'] = 'edit'
+        return context
     
     
 def load_posts(request):

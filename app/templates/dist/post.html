@@ -33,7 +33,11 @@
 					>Price ($)</label
 				>
 				<div class="sr-only">{{form.price}}</div>
+				{% if page == 'edit' %}
+				<input type="text" class="currency-input" oninput="format_number(this)" maxlength="9" value="{{post.price}}">
+				{% else %}
 				<input type="text" class="currency-input" oninput="format_number(this)" maxlength="9">
+				{% endif %}
 			</div>
 			<div class="mb-4">
 				<label class="mb-2 block font-bold text-gray-700" for="price"

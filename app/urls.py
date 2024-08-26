@@ -7,7 +7,7 @@ from django.views.generic import TemplateView
 app_name = 'app'
 urlpatterns = [
     path('', app_views.HomePageView.as_view(), name='home-page'),
-    path('edit-post/<int:pk>', app_views.EditPost.as_view(), name='edit-post'),
+    path('edit-post/<slug:slug>', app_views.EditPost.as_view(), name='edit-post'),
     path('post/', app_views.CreatePost.as_view(), name='post-page'),
     path('profile/', app_views.ProfilePageView.as_view(), name='profile-page'),
     path('liked/', app_views.FavPostsPageView.as_view(), name='liked-page'),
