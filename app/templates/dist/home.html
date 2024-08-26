@@ -21,6 +21,7 @@
 			<form method="get" action="{% url 'app:home-page' %}" class="filter-form">
 				<div class="form-group">
 					<label for="category">Категория:</label>
+					<input type="hidden" name="previous_category" value="{{ category }}">
 					<select name="category" id="category" class="form-control">
 						<option value="" {% if not request.GET.category %}selected{% endif %}>Все категории</option>
 						<!-- <option value="books" {% if request.GET.category == 'books' %}selected{% endif %}>Книги</option>
@@ -55,11 +56,11 @@
 						class="relative w-full max-w-xl"
 					>
 
-				<p>Prev: {{previous_category}}</p>
+				<!-- <p>Prev: {{previous_category}}</p>
 				<p>Min Dot: {{min_dot}}</p>
 				<p>Max Dot: {{max_dot}}</p>
 				<p>Min Price of posts: {{min_price}}</p>
-				<p>Max Price of posts: {{max_price}}</p>
+				<p>Max Price of posts: {{max_price}}</p> -->
 						<div>
 							<input
 								type="range"
