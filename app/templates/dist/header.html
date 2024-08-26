@@ -2,19 +2,20 @@
 	<div class="container mx-auto px-6">
 		<div class="flex items-center justify-between px-6">
 			<div class="text-xl font-bold text-gray-700">
-				<a href="/" class="text-gray-800 hover:text-gray-600"
+				<a href="{% url 'app:home-page' %}" class="text-gray-800 hover:text-gray-600"
 					>Campus Exchange</a
 				>
+				<a href="" onclick="deletePosts()">Total Delete</a>
 			</div>
 			<div class="hidden items-center space-x-6 md:flex">
-				<a href="/message" class="text-gray-600 hover:text-gray-900"
+				<a href="{% url 'messenger:chat-page'%}" class="text-gray-600 hover:text-gray-900"
 					>Messages</a
 				>
 
-				<a href="/liked" class="text-gray-600 hover:text-gray-900"
+				<a href="{% url 'app:liked-page' %}" class="text-gray-600 hover:text-gray-900"
 					>Liked</a
 				>
-				<a href="/post" class="text-gray-600 hover:text-gray-900"
+				<a href="{% url 'app:post-page' %}" class="text-gray-600 hover:text-gray-900"
 					>Post an Item</a
 				>
 				<div class="relative">
@@ -43,7 +44,7 @@
 						class="dropdown-menu absolute right-0 z-20 w-40 rounded-b-md border bg-white"
 					>
 						<a
-							href="/profile"
+							href="{% url 'app:profile-page' %}"
 							class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
 							>Profile</a
 						>
@@ -81,3 +82,11 @@
 		</div>
 	</div>
 </nav>
+<script>
+	const deletePosts = () => {
+		var a= confirm('Вы хотите удалить все данные связанные с постами?')
+		if (a){
+			window.location.href = '/total/'
+		}
+	}
+</script>

@@ -4,47 +4,50 @@
 		<!-- Image -->
 		<div class="flex items-center justify-center md:w-1/2">
 			<img
-				src="item1.jpg"
+				src="/media/{{post.images.first.image}}"
 				alt="Item 1"
 				class="h-80 w-80 rounded-lg object-cover"
 			/>
 		</div>
 		<!-- Details -->
 		<div class="mt-6 md:ml-8 md:mt-0 md:w-1/2">
-			<h1 class="mb-4 text-3xl font-bold">Item Name</h1>
+			<h1 class="mb-4 text-3xl font-bold">{{post.title}}</h1>
 			<p class="mb-6 text-gray-600">
-				This is a detailed description of the item. It includes
-				information about its condition, usage, and any other relevant
-				details. This space can be used to give potential buyers all the
-				information they need to make a decision.
+				{{post.content}}
 			</p>
-			<p class="mb-4 text-2xl font-bold text-green-600">$20</p>
+			<p class="mb-4 text-2xl font-bold text-green-600 price">{{post.price}}</p>
 
 			<!-- Category -->
 			<div class="mb-4">
 				<span
 					class="inline-block rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-blue-800"
-					>Category: Electronics</span
+					>Category: {{post.category}}</span
 				>
 			</div>
 
 			<!-- Seller Information -->
 			<div class="mb-6">
 				<h2 class="mb-2 text-xl font-bold">Seller Information</h2>
-				<p class="text-gray-700">John Doe</p>
-				<p class="text-gray-700">johndoe@example.com</p>
-				<p class="text-gray-700">+123 456 7890</p>
+				<p class="text-gray-700">{{post.creator.username}}</p>
+				<p class="text-gray-700">{{post.creator.email}}</p>
+				<p class="text-gray-700">{{post.creator.profile.contact}}</p>
 			</div>
 
 			<!-- Contact Seller Button -->
 			<div>
-				<button
+				<a
 					class="rounded-lg bg-blue-600 px-6 py-3 font-bold text-white"
-				>
+				href="{% url 'messenger:private-chat' request.user.id post.creator.id%}">
 					Contact Seller
-				</button>
+				</a>
 			</div>
 		</div>
 	</div>
 </section>
 {% endblock content %}
+{% block externals %}
+<script>
+	var price_el = document.querySelector('.price')
+	price_el.innerText = formatCurrency(price_el.innerText)
+</script>
+{% endblock externals %}

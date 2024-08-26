@@ -7,7 +7,16 @@ class PostForm(forms.ModelForm):
         exclude = ['creator']
         widgets = {
             
-            'price': forms.TextInput(attrs={'oninput':'length_slice(this, 9)', 'class': 'currency-input'})
+            # 'price': forms.TextInput(attrs={'oninput':'length_slice(this, 9)', 'class': 'currency-input'})
+
+        }
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['image']
+        widgets = {
+           'image':forms.FileInput(attrs={'onchange':'previewImage(this)',"accept":"image/png, image/jpeg"})
+
 
         }
 # class PostImageForm(forms.ModelForm):

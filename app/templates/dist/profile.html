@@ -7,28 +7,64 @@
 		<!-- Profile Picture -->
 		<div class="mb-6 flex justify-center">
 			<img
-				src="profile-pic.jpg"
+				src="/media/{{request.user.profile.image}}"
 				alt="Profile Picture"
-				class="h-32 w-32 rounded-full shadow-md"
+				class="h-32 w-32 rounded-full shadow-md img_part"
 			/>
 		</div>
-
+		<form method="post" enctype="multipart/form-data" class="form_image" style="display: none;">
+			{% csrf_token %}
+			{{ form_image.as_p }}
+			<button type="submit">Upload</button>
+		</form>
 		<!-- Profile Information Form -->
-		<form action="#" method="POST">
+		<form action="{% url 'app:update-user-data'%}" method="POST">
+			{% csrf_token %}
 			<!-- Name -->
 			<div class="mb-4">
 				<label class="mb-2 block font-bold text-gray-700" for="name"
-					>Full Name</label
+					>Username</label
 				>
 				<input
 					class="w-full rounded-lg border px-3 py-2 focus:border-blue-500 focus:outline-none"
 					type="text"
 					id="name"
-					name="name"
-					placeholder="Enter your full name"
-					value="John Doe"
+					name="username"
+					placeholder="Enter your username"
+					value="{{request.user.username}}"
 					required
 				/>
+				
+			</div>
+			<div class="mb-4">
+				<label class="mb-2 block font-bold text-gray-700" for="name"
+					>First Name</label
+				>
+				<input
+					class="w-full rounded-lg border px-3 py-2 focus:border-blue-500 focus:outline-none"
+					type="text"
+					id="name"
+					name="first_name"
+					placeholder="Enter your first name"
+					value="{{request.user.first_name}}"
+					required
+				/>
+				
+			</div>
+			<div class="mb-4">
+				<label class="mb-2 block font-bold text-gray-700" for="name"
+					>Last Name</label
+				>
+				<input
+					class="w-full rounded-lg border px-3 py-2 focus:border-blue-500 focus:outline-none"
+					type="text"
+					id="name"
+					name="last_name"
+					placeholder="Enter your last name"
+					value="{{request.user.last_name}}"
+					required
+				/>
+				
 			</div>
 
 			<!-- Email -->
@@ -42,7 +78,7 @@
 					id="email"
 					name="email"
 					placeholder="Enter your email"
-					value="johndoe@example.com"
+					value="{{request.user.email}}"
 					required
 				/>
 			</div>
@@ -58,41 +94,13 @@
 					id="phone"
 					name="phone"
 					placeholder="Enter your phone number"
-					value="+123 456 7890"
+					value="{{request.user.profile.contact}}"
 					required
 				/>
 			</div>
 
-			<!-- Password -->
-			<div class="mb-4">
-				<label class="mb-2 block font-bold text-gray-700" for="password"
-					>Password</label
-				>
-				<input
-					class="w-full rounded-lg border px-3 py-2 focus:border-blue-500 focus:outline-none"
-					type="password"
-					id="password"
-					name="password"
-					placeholder="Enter a new password"
-				/>
-			</div>
-
-			<!-- Profile Picture Upload -->
-			<div class="mb-4">
-				<label
-					class="mb-2 block font-bold text-gray-700"
-					for="profile-pic"
-					>Profile Picture</label
-				>
-				<input
-					class="w-full rounded-lg border px-3 py-2 focus:border-blue-500 focus:outline-none"
-					type="file"
-					id="profile-pic"
-					name="profile-pic"
-					accept="image/*"
-				/>
-			</div>
-
+			
+			
 			<!-- Submit Button -->
 			<div class="text-center">
 				<button
@@ -105,3 +113,18 @@
 	</div>
 </section>
 {% endblock content %}
+{% block externals %}
+<script>
+	const previewImage = (el) => {
+		document.querySelector('.img_part').src = URL.createObjectURL(el.files[0])
+		document.querySelector('.form_image').submit()
+	// URL.createObjectURL(el.files[i])
+		
+}
+document.querySelector('.img_part').addEventListener('click', function () {
+  document.getElementById('id_image').click();
+	// alert()
+});
+
+</script>
+{% endblock externals %}

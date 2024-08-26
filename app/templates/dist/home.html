@@ -1,4 +1,7 @@
-{% extends 'dist/main.html' %} {% block content %} {% load static %}
+{% extends 'dist/main.html' %}
+{% block content %}
+{% load static %}
+{% load custom_tag %}
 
 <style>
 	input[type="range"]::-webkit-slider-thumb {
@@ -6,70 +9,57 @@
 		width: 24px;
 		height: 24px;
 		-webkit-appearance: none;
-		/* @apply w-6 h-6 appearance-none pointer-events-auto; */
 	}
 </style>
+
+
 <div class="container mx-auto px-6 py-0">
 	<div class="flex flex-col md:flex-row md:space-x-6">
 		<!-- Filters Section -->
+		
 		<aside class="mb-8 w-full border-r md:mb-0 md:w-1/6">
-			<div class="rounded-lg p-6">
-				<h3 class="text-lg font-medium text-gray-700">Categories</h3>
-				<ul class="mt-3 space-y-2">
-					<li>
-						<a href="#" class="text-gray-600 hover:text-gray-900"
-							>Books</a
-						>
-					</li>
-					<li>
-						<a href="#" class="text-gray-600 hover:text-gray-900"
-							>Electronics</a
-						>
-					</li>
-					<li>
-						<a href="#" class="text-gray-600 hover:text-gray-900"
-							>Furniture</a
-						>
-					</li>
-					<li>
-						<a href="#" class="text-gray-600 hover:text-gray-900"
-							>Clothing</a
-						>
-					</li>
-					<li>
-						<a href="#" class="text-gray-600 hover:text-gray-900"
-							>Others</a
-						>
-					</li>
-				</ul>
-				<hr class="my-4" />
-
-				<h3 class="text-lg font-medium text-gray-700">Condition</h3>
-				<div class="mt-4 space-y-2">
-					<label class="flex items-center">
-						<input
-							type="checkbox"
-							class="form-checkbox text-blue-600"
-						/>
-						<span class="ml-2">New</span>
-					</label>
-					<label class="flex items-center">
-						<input
-							type="checkbox"
-							class="form-checkbox text-blue-600"
-						/>
-						<span class="ml-2">Used</span>
-					</label>
+			<form method="get" action="{% url 'app:home-page' %}" class="filter-form">
+				<div class="form-group">
+					<label for="category">Категория:</label>
+					<select name="category" id="category" class="form-control">
+						<option value="" {% if not request.GET.category %}selected{% endif %}>Все категории</option>
+						<!-- <option value="books" {% if request.GET.category == 'books' %}selected{% endif %}>Книги</option>
+						<option value="electronics" {% if request.GET.category == 'electronics' %}selected{% endif %}>Электроника</option>
+						<option value="furniture" {% if request.GET.category == 'furniture' %}selected{% endif %}>Мебель</option>
+						<option value="clothing" {% if request.GET.category == 'clothing' %}selected{% endif %}>Одежда</option>
+						<option value="others" {% if request.GET.category == 'others' %}selected{% endif %}>Прочие</option> -->
+						
+						{% for category in categories %}
+						<!--  -->
+						{% with request.GET.category|to_int as int_var %}
+						<option value="{{category.id}}" {% if int_var == category.id %}selected{% endif %}>{{category.name}}</option>
+						
+						{% endwith %}
+						{% endfor %}
+					</select>
 				</div>
-				<hr class="my-4" />
-
-				<h3 class="text-lg font-medium text-gray-700">Price Range</h3>
+			
+				<div class="form-group">
+					<label for="condition">Состояние:</label>
+					<select name="condition" id="condition" class="form-control">
+						<option value="" {% if not request.GET.condition %}selected{% endif %}>Все состояния</option>
+						<option value="new" {% if request.GET.condition == 'new' %}selected{% endif %}>Новое</option>
+						<option value="used" {% if request.GET.condition == 'used' %}selected{% endif %}>Б/у</option>
+					</select>
+				</div>
+			
 				<div class="mt-4 flex items-center justify-center">
 					<div
 						x-data="range()"
 						x-init="mintrigger(); maxtrigger()"
 						class="relative w-full max-w-xl"
 					>
+
+				<p>Prev: {{previous_category}}</p>
+				<p>Min Dot: {{min_dot}}</p>
+				<p>Max Dot: {{max_dot}}</p>
+				<p>Min Price of posts: {{min_price}}</p>
+				<p>Max Price of posts: {{max_price}}</p>
 						<div>
 							<input
 								type="range"
@@ -80,7 +70,7 @@
 								x-model="minprice"
 								class="pointer-events-none absolute z-20 h-2 w-full cursor-pointer appearance-none opacity-0"
 							/>
-
+		
 							<input
 								type="range"
 								step="100"
@@ -90,61 +80,63 @@
 								x-model="maxprice"
 								class="pointer-events-none absolute z-20 h-2 w-full cursor-pointer appearance-none opacity-0"
 							/>
-
+		
 							<div class="relative z-10 h-2">
 								<div
 									class="absolute bottom-0 left-0 right-0 top-0 z-10 rounded-md bg-gray-200"
 								></div>
-
+		
 								<div
 									class="absolute bottom-0 top-0 z-20 rounded-md bg-blue-300"
 									x-bind:style="'right:'+maxthumb+'%; left:'+minthumb+'%'"
 								></div>
-
+		
 								<div
 									class="absolute left-0 top-0 z-30 -ml-0.5 -mt-1 h-4 w-4 rounded-full bg-blue-300"
 									x-bind:style="'left: '+minthumb+'%'"
 								></div>
-
+		
 								<div
 									class="absolute right-0 top-0 z-30 -mr-0.5 -mt-1 h-4 w-4 rounded-full bg-blue-300"
 									x-bind:style="'right: '+maxthumb+'%'"
 								></div>
 							</div>
 						</div>
-
-						<div class="flex items-center justify-between py-5">
+		
+						<div class=" items-center justify-between py-5">
 							<div>
 								<input
 									type="text"
-									maxlength="5"
+									name="min_price"
+									maxlength="6"
 									x-on:input="mintrigger"
 									x-model="minprice"
-									class="w-16 rounded border border-gray-200 px-2 text-center"
+									class="w-20 rounded border border-gray-200 px-2 text-center"
 								/>
 							</div>
 							<div>
 								<input
 									type="text"
-									maxlength="5"
+									name="max_price"
+									maxlength="6"
 									x-on:input="maxtrigger"
 									x-model="maxprice"
-									class="w-16 rounded border border-gray-200 px-2 text-center"
+									class="w-20 rounded border border-gray-200 px-2 text-center"
 								/>
 							</div>
 						</div>
 					</div>
-
+		
 					<script>
 						function range() {
 							return {
-								minprice: 1000,
-								maxprice: 7000,
-								min: 100,
-								max: 10000,
+								minprice: "{{min_price}}",
+								maxprice: "{{max_price}}",
+								min: "{{min_dot}}",
+								max: "{{max_dot}}",
 								minthumb: 0,
 								maxthumb: 0,
-
+		
 								mintrigger() {
 									this.minprice = Math.min(
 										this.minprice,
@@ -155,7 +147,7 @@
 											(this.max - this.min)) *
 										100;
 								},
-
+		
 								maxtrigger() {
 									this.maxprice = Math.max(
 										this.maxprice,
@@ -171,138 +163,111 @@
 						}
 					</script>
 				</div>
-
-				<hr class="my-4" />
-				<h3 class="text-lg font-medium text-gray-700">Location</h3>
-				<div class="mt-4 space-y-2">
-					<label class="flex items-center">
-						<input
-							type="checkbox"
-							class="form-checkbox text-blue-600"
-						/>
-						<span class="ml-2">On Campus</span>
-					</label>
-					<label class="flex items-center">
-						<input
-							type="checkbox"
-							class="form-checkbox text-blue-600"
-						/>
-						<span class="ml-2">Nearby</span>
-					</label>
-				</div>
-			</div>
+			
+				<button type="submit" class="btn btn-primary">Фильтровать</button>
+			</form>
 		</aside>
-
+		
 		<!-- Product Listings Section -->
 		<div class="w-full md:w-3/4">
 			<h2 class="my-4 text-xl font-semibold text-gray-800">
-				Available Items
+				Найдено {{posts_count}} объявлении
 			</h2>
 			<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 container-ajax">
 				<!-- Product Card -->
-				
-				<!-- Repeat product cards as needed -->
-				 
+				 {% for post in posts %}
+				 <div class="overflow-hidden rounded-md bg-white shadow-md cursor-pointer relative card" onclick="redirectTo('{{post.id}}')">
+					<img src="{{post.images.first.image.url}}" alt="Product Image" class="h-48 w-full object-cover" />
+                            <div class="p-5 pt-3.5">
+                                <div class="flex items-center justify-between gap-2">
+                                    <p class="flex h-12 cursor-pointer items-center text-gray-800 hover:underline">{{post.title}}</p>
+                                    
+										{% check_for_like request.user.id post.id as is_liked_by_user %}
+										{% if is_liked_by_user %}
+										<label class="inline-flex cursor-pointer items-center heart-icon fill" post_id = "{{post.id}}">
+											<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+												<path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+											</svg>
+										</label>
+										{% else %}
+										<label class="inline-flex cursor-pointer items-center heart-icon" post_id = "{{post.id}}">
+
+											<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+												<path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+											</svg>
+										</label>
+										{% endif %}
+                                </div>
+                                <p class="mb-4 mt-2 text-lg font-semibold text-gray-900 currency-text">{{post.price}}</p>
+                                <div class="flex justify-between text-sm text-gray-600">
+                                    <span><span class="created_at" date_input='{{post.created_at.date|date:"Y-m-d"}}' date_input_alternative = '{{post.created_at.date}}'></span> {{post.created_at.time}}</span>
+                                    <span>Block {{post.block}}</span>
+                                </div>
+                            </div>
+				 </div>
+				 {% endfor %}
+				 <div class="pagination">
+    <div class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?{% if category %}category={{ category }}&{% endif %}{% if condition %}condition={{ condition }}&{% endif %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}page=1">&laquo; первая</a>
+            <a href="?{% if category %}category={{ category }}&{% endif %}{% if condition %}condition={{ condition }}&{% endif %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}page={{ page_obj.previous_page_number }}">предыдущая</a>
+        {% endif %}
+
+        <p class="current">
+            Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.
+        </p>
+
+        {% if page_obj.has_next %}
+            <a href="?{% if category %}category={{ category }}&{% endif %}{% if condition %}condition={{ condition }}&{% endif %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}page={{ page_obj.next_page_number }}">следующая</a>
+            <a href="?{% if category %}category={{ category }}&{% endif %}{% if condition %}condition={{ condition }}&{% endif %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}page={{ page_obj.paginator.num_pages }}">последняя &raquo;</a>
+        {% endif %}
+    </div>
+</div>
+
 			</div>
 		</div>
 	</div>
 </div>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // let offset = {{ posts|length }}; // Start with the number of posts already loaded
-		let offset = 0
-		let maxSize = "{{posts|length}}"
-		console.log(maxSize)
-		// alert(offset)
-        const limit = 10; 
-        const container = document.querySelector('.container-ajax');
-        // const loadingIndicator = document.getElementById('loading');
-        let loading = false;
 
-        function loadMorePosts() {
-            if (loading) return;
-            loading = true;
-            // loadingIndicator.style.display = 'block';
 
-            if(offset < maxSize){
-				fetch(`/load-posts/?offset=${offset}`)
-                .then(response => response.json())
-                .then(data => {
-					console.log(data)
-                    data.posts.forEach(post => {
-							console.log(1)
-                            const card = document.createElement('div');
-                            card.className = 'overflow-hidden rounded-md bg-white shadow-md cursor-pointer relative';
-                            card.innerHTML = `
-                                <img src="${post.image_url}" alt="Product Image" class="h-48 w-full object-cover" />
-                                <div class="p-5 pt-3.5">
-                                    <div class="flex items-center justify-between gap-2">
-                                        <a href="/details" class="flex h-12 cursor-pointer items-center text-gray-800 hover:underline">${post.title}</a>
-                                        <label class="inline-flex cursor-pointer items-center">
-                                            <input type="checkbox" value="" class="peer sr-only" unchecked />
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 peer-checked:fill-gray-800">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
-                                            </svg>
-                                        </label>
-                                    </div>
-                                    <p class="mb-4 mt-2 text-lg font-semibold text-gray-900 currency-text">${formatCurrency(post.price)}</p>
-                                    <div class="flex justify-between text-sm text-gray-600">
-                                        <span><span>${formatDate(post.created_at)}</span> ${post.created_time}</span>
-                                        <span>Block ${post.block}</span>
-                                    </div>
-                                </div>
-                            `;
-                            container.appendChild(card);
-                        });
-                        offset += limit;
-                    	loading = false;
-                })
-                .catch(error => {
-                    console.error('Error loading posts:', error);
-                    loading = false;
-                });
-        }
 
-			}
-        window.addEventListener('scroll', function() {
-                if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 50) {
-                    loadMorePosts();
-                }
-            });
-
-        loadMorePosts(); // Load initial posts
-    });
-</script>
+{% endblock %}
+{% block externals %}
 <script>
 	
-	function formatCurrency(value) {
-		return Intl.NumberFormat("de-DE", {
-				style: "currency",
-				currency: "KZT",
-				maximumSignificantDigits: 10,
-			}).format(value);
-	}
-	
-
-</script>
-<script>
+	const all_cards = document.querySelectorAll('.card')
+	const heart_icons = document.querySelectorAll('.heart-icon')
+	const priceElements = document.querySelectorAll('.currency-text');
+	const created_at_dates = document.querySelectorAll('.created_at')
 	const today = new Date('{{today|date:"Y-m-d"}}').setHours(0, 0, 0, 0);
-	const elements = document.querySelectorAll('.created_at');
-	const formatDate = (date) => {
-		const elemDate = new Date(date).setHours(0, 0, 0, 0);
-		const dayDiff = (today - elemDate) / (1000 * 60 * 60 * 24);
-		if (dayDiff === 0) {
-			date = 'Сегодня в';
-		} else if (dayDiff === 1) {
-			date = 'Вчера в';
-		} else if (dayDiff >= 2 && dayDiff <= 3) {
-			date = `${Math.floor(dayDiff)} дня назад в`;
-		} else {
-			date = `${Math.floor(dayDiff)} дней назад в`;
-		}
-		return date
-	}
+    
+    all_cards.forEach(function(element, index) {
+        const price = parseFloat(priceElements[index].textContent.trim());
+		
+        if (!isNaN(price)) {
+            priceElements[index].textContent = formatCurrency(price);
+        }
+		created_at_dates[index].textContent = formatDate(created_at_dates[index].getAttribute('date_input'), created_at_dates[index].getAttribute('date_input_alternative'))
+		heart_icons[index].addEventListener('click', function(event){
+			event.stopPropagation();
+			event.preventDefault();
+			if(heart_icons[index].classList.contains('fill')){
+				heart_icons[index].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16"> <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/></svg>'			
+				heart_icons[index].classList.remove('fill');
+				fetch(`/fav_posts/delete/${heart_icons[index].getAttribute('post_id')}`)
+			}
+			else{
+				heart_icons[index].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/></svg>'
+				heart_icons[index].classList.add('fill');
+				fetch(`/fav_posts/add/${heart_icons[index].getAttribute('post_id')}`)
+			}
+				}
+			
+	)
+	});
+	
+	
+    
+	
 </script>
-
-
-{% endblock content %}
+{% endblock externals %}

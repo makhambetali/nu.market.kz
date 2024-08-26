@@ -32,7 +32,14 @@
 				<label class="mb-2 block font-bold text-gray-700" for="price"
 					>Price ($)</label
 				>
-				{{form.price}}
+				<div class="sr-only">{{form.price}}</div>
+				<input type="text" class="currency-input" oninput="format_number(this)" maxlength="9">
+			</div>
+			<div class="mb-4">
+				<label class="mb-2 block font-bold text-gray-700" for="price"
+					>Category</label
+				>
+				{{form.category}}
 			</div>
 			<div class="mb-4">
 				<label class="mb-2 block font-bold text-gray-700" for="price"
@@ -127,7 +134,7 @@
 </section>
 
 {% endblock content %}
-{% block sources %}
+{% block externals %}
 <link rel="stylesheet" href="{% static 'css/drag.css'%}">
 <script>
 	IMask(
@@ -142,6 +149,10 @@
 		 }
 	 }
  );
+ const format_number = (el) => {
+	document.querySelector('[name="price"]').value = el.value.replace(/[^0-9+-]/g, '');
+	console.log(el.value.replace(/[^0-9+-]/g, ''))
+ }
 </script>
 <script src="{% static 'js/drag.js'%}"></script>
-{% endblock sources %}
+{% endblock externals %}
