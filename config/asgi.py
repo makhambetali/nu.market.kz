@@ -5,7 +5,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter , URLRouter
-from messenger import routing
+from src.messenger import routing
 
 application = ProtocolTypeRouter(
     {

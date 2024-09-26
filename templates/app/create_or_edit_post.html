@@ -1,0 +1,86 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block content %}
+<section class="container mx-auto my-10">
+	<h2 class="mb-8 text-center text-3xl font-bold">Post a New Item</h2>
+	<div class="mx-auto max-w-lg rounded-lg bg-white p-8 shadow-lg">
+		<form action="#" method="POST" enctype="multipart/form-data">
+			<!-- Item Name -->
+			<div class="mb-4">
+				<label class="mb-2 block font-bold text-gray-700" for="item-name">Item Name</label>
+				{% csrf_token %} {{form.title}}
+			</div>
+
+			<!-- Description -->
+			<div class="mb-4">
+				<label class="mb-2 block font-bold text-gray-700" for="description">Description</label>
+
+				{{form.content}}
+			</div>
+
+			<!-- Price -->
+			<div class="mb-4">
+				<label class="mb-2 block font-bold text-gray-700" for="price">Price ($)</label>
+				<div class="sr-only">{{form.price}}</div>
+				{% if page == 'edit' %}
+				<input type="text" class="currency-input" oninput="format_number(this)" maxlength="9"
+					value="{{post.price}}">
+				{% else %}
+				<input type="text" class="currency-input" oninput="format_number(this)" maxlength="9">
+				{% endif %}
+			</div>
+			<div class="mb-4">
+				<label class="mb-2 block font-bold text-gray-700" for="price">Category</label>
+				{{form.category}}
+			</div>
+			<div class="mb-4">
+				<label class="mb-2 block font-bold text-gray-700" for="price">Condition</label>
+				{{form.condition}}
+			</div>
+			<div class="mb-4">
+				<label class="mb-2 block font-bold text-gray-700" for="price">Block</label>
+				{{form.block}}
+			</div>
+			{% for category in categories %}
+			<select name="" id="">
+				{% for subcategory in category.subcategories.all %}
+									<option>{{ subcategory.name }}</option>
+								{% endfor %}
+			</select>
+			{% endfor %}
+			
+			<input type="file" name="files" class="files" multiple accept=".png, .jpg, .jpeg">
+			<div class="text-center">
+
+				<input type="submit" value="Submit" />
+			
+			</div>
+
+
+		</form>
+	</div>
+</section>
+
+{% endblock content %}
+{% block externals %}
+<link rel="stylesheet" href="{% static 'css/drag.css'%}">
+<script>
+	IMask(
+		document.querySelector('.currency-input'),
+		{
+			mask: '₸ num',
+			blocks: {
+				num: {
+					mask: Number,
+					thousandsSeparator: '.'
+				}
+			}
+		}
+	);
+	const format_number = (el) => {
+		document.querySelector('[name="price"]').value = el.value.replace(/[^0-9+-]/g, '');
+		console.log(el.value.replace(/[^0-9+-]/g, ''))
+	}
+</script>
+<script src="{% static 'js/drag.js'%}"></script>
+{% endblock externals %}

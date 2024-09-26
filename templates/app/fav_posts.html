@@ -1,0 +1,67 @@
+{% extends 'app/base.html' %} {% block content %}
+
+<section class="container mx-auto">
+	<!-- <h2 class="text-3xl font-bold mb-8 text-center">Your Liked Items</h2> -->
+
+	<div class="grid grid-cols-8 gap-x-5 pt-4 pb-96">
+		<!-- Item 1 -->
+		<div></div>
+
+		<!-- Product Listings Section -->
+		<div class="col-span-6 grid grid-cols-4 border-l border-t">
+			{% for fav_post in fav_posts %}
+			<div class="bg-white gap-y-4 p-4 card border-b border-r" post_id="{{fav_post.post.id}}"
+				onclick="redirectTo('{{fav_post.post.slug}}')">
+				<img src="/media/{{fav_post.post.images.first.image}}" alt="Item 1" class="h-48 object-cover rounded" />
+				<div class="flex flex-col justify-between">
+					<div class="flex flex-col">
+						<p class="flex cursor-pointer hover:underline overflow-ellipsis">
+							{{fav_post.post.title}}</p>
+						<p class="text-gray-600 text-sm">
+							{{fav_post.post.content|slice:":50"}}
+						</p>
+					</div>
+					<p class="text-lg font-semibold !leading-5 price">{{fav_post.post.price}}</p>
+				</div>
+				<div class="flex justify-between items-center">
+					<button class="bg-red-600 text-white px-4 py-2 rounded-lg font-bold deleteFromFavBtn"
+						post_id="{{fav_post.post.id}}">
+						Remove
+					</button>
+				</div>
+			</div>
+			{% endfor %}
+
+			<!-- Add more items here -->
+
+		</div>
+	</div>
+</section>
+
+{% endblock content %}
+{% block externals %}
+<script>
+	const deleteFromFav = (id) => {
+
+
+		fetch(`/fav_posts/delete/${id}`)
+			.then(response => response.json())
+			.then(data => {
+				console.log('Успешно сохранено');
+			});
+
+		document.querySelector(`[post_id="${id}"]`).remove();
+	}
+	document.querySelectorAll('.card').forEach((each, index) => {
+		var deleteButton = document.querySelectorAll('.deleteFromFavBtn')[index]
+		var priceText = document.querySelectorAll('.price')[index]
+		priceText.innerText = formatCurrency(priceText.innerText)
+		deleteButton.addEventListener('click', function (event) {
+			event.preventDefault();
+			event.stopPropagation();
+			deleteFromFav(deleteButton.getAttribute('post_id'))
+		})
+	})
+
+</script>
+{% endblock externals %}s

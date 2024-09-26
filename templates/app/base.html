@@ -1,0 +1,73 @@
+{% load static tailwind_tags %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Document</title>
+	{% tailwind_css %}
+	<link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.css" rel="stylesheet" />
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+		rel="stylesheet">
+
+	<style>
+		.dropdown-menu {
+			display: none;
+		}
+
+		.dropdown-menu.show {
+			display: block;
+		}
+	</style>
+</head>
+
+<body class="bg-gray-50 text-black font-inter">
+	{% include 'app/header.html' %}
+	{% if messages %}
+	<ul class="messages">
+		{% for message in messages %}
+		<li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+			{% endfor %}
+	</ul>
+	{% endif %}
+	{% block content %} {% endblock %}
+	{% include 'app/footer.html' %}
+	<script>
+		const redirectTo = (id) => {
+			window.location.href = `/details/${id}`;
+
+		};
+		function formatCurrency(value) {
+			return Intl.NumberFormat("de-DE", {
+				maximumSignificantDigits: 10,
+			}).format(value);
+		}
+		const formatDate = (date, date_alternative, time) => {
+
+			const elemDate = new Date(date).setHours(0, 0, 0, 0)
+			const dayDiff = (today - elemDate) / (1000 * 60 * 60 * 24);
+			if (dayDiff === 0) {
+				date = `Сегодня, ${time}`;
+			} else if (dayDiff === 1) {
+				date = `Вчера, ${time}`;
+			}
+			else {
+				date = date_alternative
+			}
+			return date
+		}
+
+	</script>
+	<script src="{% static 'js/imask.js'%}"></script>
+	<script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
+
+	{% block externals %}
+	{% endblock externals %}
+</body>
+
+</html>

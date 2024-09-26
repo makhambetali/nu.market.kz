@@ -1,11 +1,11 @@
 
 from django.contrib import admin
 from django.urls import path, include
-from app import views as app_views
+# from src.app import views as app_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('app.urls')),
-    path('messenger/', include('messenger.urls')),
-    path('accounts/', include('users.urls')),
+    path('', include('src.app.urls')),
+    path('messenger/', include('src.messenger.urls')),
+    path('accounts/', include('src.users.urls')),
 ]

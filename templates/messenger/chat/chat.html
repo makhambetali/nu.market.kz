@@ -1,0 +1,218 @@
+{% extends 'app/base.html' %} {% block content %}
+<section class="container mx-auto my-8 flex flex-col md:flex-row">
+	<!-- Contacts List -->
+	<div class="rounded-lg bg-white shadow-lg md:w-1/3">
+		<h2 class="text-xl font-bold p-4">
+			Выберите пользователя для переписки
+		</h2>
+		<ul class="grid grid-cols-1">
+			{% for user in users %}
+			<li>
+				<a href=" {% url 'messenger:private-chat' user1=request.user.username user2=user.username %}"
+					class="flex items-center justify-start px-3 gap-x-3 hover:bg-gray-200 {% if receiver and receiver.id == user.id %}bg-gray-300{% endif %}">
+					<img src="/media/{{user.profile.image}}" alt=""
+						class="size-12 rounded-full object-cover flex-shrink-0 bg-gray-400" />
+					<div class="border-b border-gray-300 w-full py-3">
+						<p class="font-bold text-gray-700 mb-1">
+							{{ user.username }}
+						</p>
+						<p class="text-sm text-gray-500">Last message...</p>
+					</div>
+				</a>
+			</li>
+			{% endfor %}
+		</ul>
+	</div>
+
+	<!-- Chat Section -->
+	<div class="mt-6 rounded-lg bg-white p-4 shadow-lg md:ml-6 md:mt-0 md:w-2/3">
+		{% if receiver %}
+		<div class="flex h-full flex-col">
+			<!-- Chat Header -->
+			<div class="mb-4 flex items-center border-b pb-4">
+				<img src="/media/{{receiver.profile.image}}" alt="{{ receiver.username }}"
+					class="mr-4 h-10 w-10 rounded-full object-cover" />
+				<div>
+					<h3 class="text-xl font-bold">{{ receiver.username }}</h3>
+					<p class="text-sm text-gray-600">Online</p>
+				</div>
+			</div>
+
+			<!-- Chat Messages -->
+			<div class="flex-1 overflow-y-auto">
+				<div class="space-y-4" id="id_chat_item_container">
+					{% for message in user_messages %}
+					<div
+						class="flex {% if message.username == request.user.username %}justify-end{% else %}justify-start{% endif %}">
+						<div
+							class="rounded-lg {% if message.username == request.user.username %}bg-blue-600 text-white{% else %}bg-blue-100{% endif %} p-4">
+							<p class="text-sm">{{ message.message }}</p>
+							{% if message.username == request.user.username%}
+							<script>
+								alert();
+							</script>
+							{% endif %}
+							<span class="text-xs text-gray-500">{{ message.timestamp|date:"H:i" }}</span>
+						</div>
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+
+			<!-- Chat Input -->
+			<div class="border-t pt-4">
+				<input type="text" placeholder="Type a message..."
+					class="w-full rounded-lg border px-3 py-2 focus:border-blue-500 focus:outline-none"
+					id="id_message_send_input" name="message" />
+				<button type="submit" class="ml-4 rounded-lg bg-blue-600 px-6 py-2 text-white"
+					id="id_message_send_button">
+					Send
+				</button>
+			</div>
+		</div>
+		{% else %}
+		<p class="text-gray-500">
+			Выберите пользователя слева для начала переписки.
+		</p>
+		{% endif %}
+	</div>
+	<div id="context-menu" class="context-menu">
+		<a href="#" id="edit-message"><i class="bi bi-pencil icon"></i>Edit</a>
+		<a href="#" id="delete-message"><i class="bi bi-trash icon"></i>Delete</a>
+	</div>
+</section>
+{% endblock content %} {% if receiver %} {% block externals %}
+<script>
+	const roomName = "{{ room }}";
+	const user = "{{ request.user }}";
+	const chatSocket = new WebSocket(
+		"ws://" + window.location.host + "/ws/chat/" + roomName + "/"
+	);
+	const chatLog = document.querySelector("#id_chat_item_container");
+	const contextMenu = document.querySelector("#context-menu");
+	let selectedMessageElement = null;
+
+	chatSocket.onopen = function (e) {
+		console.log("The connection was set up successfully!");
+	};
+
+	chatSocket.onclose = function (e) {
+		console.log("Connection closed unexpectedly!");
+	};
+
+	document.querySelector("#id_message_send_input").focus();
+
+	document.querySelector("#id_message_send_input").onkeyup = function (e) {
+		if (e.keyCode === 13) {
+			document.querySelector("#id_message_send_button").click();
+		}
+	};
+
+	document.querySelector("#id_message_send_button").onclick = function (e) {
+		var messageInput = document.querySelector(
+			"#id_message_send_input"
+		).value;
+		if (messageInput.length != 0) {
+			chatSocket.send(
+				JSON.stringify({
+					action: "create",
+					message: messageInput,
+					username: "{{ request.user.username }}",
+					room: roomName,
+				})
+			);
+			// if(document.querySelector('.no-messages')){
+			//     document.querySelector('.no-messages').style.display = 'none'
+			// }
+		}
+	};
+
+	chatSocket.onmessage = function (e) {
+		const data = JSON.parse(e.data);
+		console.log(data.action);
+		if (data.action == "create") {
+			const messageDiv = document.createElement("div");
+			id = data.id;
+			if (user == data.username) {
+				messageDiv.classList.add("user-message");
+				messageDiv.innerText = data.message;
+			} else {
+				messageDiv.classList.add("other-message");
+				messageDiv.innerText = data.message;
+			}
+			messageDiv.setAttribute("data-message-id", id);
+
+			document.querySelector("#id_message_send_input").value = "";
+			chatLog.appendChild(messageDiv);
+		} else if (data.action == "delete") {
+			if (document.querySelector(`[data-message-id="${data.id}"]`)) {
+				document
+					.querySelector(`[data-message-id="${data.id}"]`)
+					.remove();
+			}
+		} else if (data.action == "edit") {
+			document.querySelector(`[data-message-id="${data.id}"]`).innerText =
+				data.message;
+		}
+	};
+
+	chatLog.addEventListener("contextmenu", function (e) {
+		e.preventDefault();
+		if (e.target.classList.contains("user-message")) {
+			selectedMessageElement = e.target;
+			const rect = e.target.getBoundingClientRect();
+			contextMenu.style.top = `${rect.bottom + window.scrollY}px`;
+			contextMenu.style.left = `${rect.left + window.scrollX}px`;
+			contextMenu.style.display = "block";
+		}
+	});
+
+	document.addEventListener("click", function (e) {
+		if (!contextMenu.contains(e.target)) {
+			contextMenu.style.display = "none";
+		}
+	});
+
+	document
+		.querySelector("#edit-message")
+		.addEventListener("click", function (e) {
+			e.preventDefault();
+			if (selectedMessageElement) {
+				const messageId = selectedMessageElement.dataset.messageId;
+				var newMessage = prompt(`Edit message ID: ${messageId}`);
+				chatSocket.send(
+					JSON.stringify({
+						action: "edit",
+						messageId: messageId,
+						message: newMessage,
+					})
+				);
+				selectedMessageElement.innerText = newMessage;
+				contextMenu.style.display = "none";
+			}
+		});
+
+	document
+		.querySelector("#delete-message")
+		.addEventListener("click", function (e) {
+			e.preventDefault();
+			if (selectedMessageElement) {
+				const messageId = selectedMessageElement.dataset.messageId;
+				if (
+					confirm(
+						`Are you sure you want to delete message ID: ${messageId}?`
+					)
+				) {
+					chatSocket.send(
+						JSON.stringify({
+							action: "delete",
+							messageId: messageId,
+						})
+					);
+					selectedMessageElement.remove();
+				}
+				contextMenu.style.display = "none";
+			}
+		});
+</script>
+{% endblock externals %} {% endif %}
