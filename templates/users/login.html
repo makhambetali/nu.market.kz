@@ -1,92 +1,103 @@
-{% load static %}
-{% load static tailwind_tags %}
-<!DOCTYPE html>
+{% load static %} {% load static tailwind_tags %}
+<!doctype html>
 <html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link
+			rel="icon"
+			href="{% static 'img/logo.png'%}"
+			type="image/icon type"
+		/>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{% static 'img/logo.png'%}" type="image/icon type">
-    
-	{% tailwind_css %}
-    <title>InvoiControl</title>
-    <title>Document</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link
-		href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
-		rel="stylesheet">
+		{% tailwind_css %}
+		<title>Login</title>
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+		/>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+			rel="stylesheet"
+		/>
+	</head>
+	<body class="flex h-screen">
+		<div>
+			<img
+				src="{% static 'system_images/login-page-background.jpg' %}"
+				`
+				alt=""
+				class="h-screen"
+			/>
+		</div>
+		<div class="my-auto w-2/5 pl-12 pr-24">
+			<form class="flex flex-col" method="post">
+				{% csrf_token%}{% if messages %} {% for msg in messages %}
 
+				<div class="alert alert-{{msg.level_tag}} " role="alert">
+					{{msg.message}}
+				</div>
 
-</head>
-<style>
-    body{
-        background-image: url("{% static 'system_images/login-page-background.jpg' %}");
-        background-size: contain;
-        background-position: right;
-        background-repeat: no-repeat;
-    }
-</style>
-
-<body class="flex justify-start items-center font-inter h-screen">
-    <div class="flex justify-center items-center w-1/2 h-screen bg-white">
-        <form class="flex flex-col items-center" method="post">
-            <span class="text-2xl mb-4">Sign In to Account</span>
-            {% csrf_token%}
-            {% if messages %}
-    
-            {% for msg in messages %}
-    
-            <div class="alert alert-{{msg.level_tag}} " role="alert">
-    
-                {{msg.message}}
-            </div>
-    
-            {% endfor %}
-    
-            {% endif %}
-            <div class="flex flex-col mb-4">
-                <span>Username</span>
-            {{form.username}}
-            </div>
-            <div class="flex flex-col">
-                <span>Password</span>
-            {{form.password}}
-            <a href="{% url 'users:password_reset'%}" class="self-end text-sm text-gray-600 hover:underline">Forget password?</a>
-            </div>
-            <button onclick="toggle_checkbox()" class="text-sm">
-                <!-- {{form.as_p}} -->
-                <input type="checkbox" name="user_remember"> Remember me
-            </button>
-    
-    
-            <p>
-    
-                <button class="bg-[#FFBA24] px-4 py-2 rounded-lg" type="submit">Sign In</button>
-            </p>
-            
-            <a href="{% url 'users:register'%}">Didn't sign up yet?</a>
-        </form>
-    </div>
-    <script>
-        var typeObject = {
-            'bi bi-eye-slash': 'text',
-            'bi bi-eye': 'password'
-        }
-        document.querySelectorAll('i').forEach((each, index) => {
-            each.addEventListener('click', () => {
-
-                each.classList.toggle('bi-eye-slash')
-                each.classList.toggle('bi-eye')
-                document.querySelectorAll('.password_line input')[index].type = typeObject[each.classList]
-            })
-        })
-        var checkInp = document.querySelector('.remember_check')
-        const toggle_checkbox = () => {
-            checkInp.checked = !checkInp.checked
-        }
-    </script>
-</body>
+				{% endfor %} {% endif %}
+				<span class="mb-2 text-3xl font-bold">Welcome 👋</span>
+				<span class="mb-7 text-[#A4A1AA]">Please login here</span>
+				<span class="mb-1 text-xs">Username</span>
+				{{form.username}}
+				<span class="mb-1 text-xs">Password</span>
+				{{form.password}}
+				<div class="mb-7 flex items-center justify-between">
+					<button
+						onclick="toggle_checkbox()"
+						class="flex items-center"
+						type="button"
+					>
+						<input
+							type="checkbox"
+							id=""
+							name="user_remember"
+							class="text-yellow size-4"
+						/>
+						<label for="" class="ml-2">Remember me</label>
+					</button>
+					<a
+						href="{% url 'users:password_reset'%}"
+						class="hover:underline"
+						>Forgot Password?</a
+					>
+				</div>
+				<button
+					class="bg-yellow rounded-xl py-4 text-white mb-7"
+					type="submit"
+				>
+					Login
+				</button>
+				<a
+					href="{% url 'users:register'%}"
+					class="text-[#A4A1AA] self-center hover:underline"
+					>Didn't signed up yet?</a
+				>
+			</form>
+		</div>
+	</body>
+	<script>
+		var typeObject = {
+			"bi bi-eye-slash": "text",
+			"bi bi-eye": "password",
+		};
+		document.querySelectorAll("i").forEach((each, index) => {
+			each.addEventListener("click", () => {
+				each.classList.toggle("bi-eye-slash");
+				each.classList.toggle("bi-eye");
+				document.querySelectorAll(".password_line input")[index].type =
+					typeObject[each.classList];
+			});
+		});
+		var checkInp = document.querySelector(".remember_check");
+		const toggle_checkbox = () => {
+			checkInp.checked = !checkInp.checked;
+		};
+	</script>
 </html>
