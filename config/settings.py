@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'theme',
     'channels',
     'src.messenger',
-    'django.contrib.humanize',
     
 ]
 TAILWIND_APP_NAME = 'theme'
@@ -166,3 +165,10 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels.layers.InMemoryChannelLayer"
     }
 }
+
+DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
