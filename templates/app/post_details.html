@@ -1,12 +1,20 @@
 {% extends 'app/base.html' %} {% block content %}
-<section class="container mx-auto my-10">
-	<div class="flex flex-col rounded-lg bg-white p-8 shadow-lg md:flex-row">
+<section class="container mx-auto px-16">
+	<div class="grid grid-cols-12 gap-x-5">
 		<!-- Image -->
-		<div class="flex items-center justify-center md:w-1/2">
-			<img src="/media/{{post.images.first.image}}" alt="Item 1" class="h-80 w-80 rounded-lg object-cover" />
+		<div class="flex col-span-6 gap-x-3">
+			<div class="flex flex-col w-36 gap-y-3">
+				<img src="/media/{{post.images.first.image}}" alt="" class="aspect-[152/167] rounded-2xl"/>
+				<img src="/media/{{post.images.first.image}}" alt="" class="aspect-[152/167] rounded-2xl"/>
+				<img src="/media/{{post.images.first.image}}" alt="" class="aspect-[152/167] rounded-2xl"/>
+			</div>
+			<div class="flex-1">
+				
+			<img src="/media/{{post.images.first.image}}" alt="" class="h-full rounded-2xl"/>
+			</div>
 		</div>
 		<!-- Details -->
-		<div class="mt-6 md:ml-8 md:mt-0 md:w-1/2">
+		<div class="col-span-6">
 			<h1 class="mb-4 text-3xl font-bold">{{post.title}}</h1>
 			<p class="mb-6 text-gray-600">
 				{{post.content}}
