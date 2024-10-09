@@ -15,6 +15,7 @@ urlpatterns = [
     path('edit-post/<slug:slug>', EditPost.as_view(), name='edit-post'),
     path('delete-post/<slug:slug>', DeletePost.as_view(), name='delete-post'),
     path('liked/', FavPostsPageView.as_view(), name='liked-page'),
+    path('my_posts/', MyPostsPageView.as_view(), name='my-posts'),
     path('details/<slug:slug>', DetailPageView.as_view(), name='details-page'),
     path('fav_posts/add/<slug:slug>', addToFav, name='fav-add'),
     path('fav_posts/delete/<slug:slug>', deleteFromFav, name='fav-delete'),

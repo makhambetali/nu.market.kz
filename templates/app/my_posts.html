@@ -1,0 +1,51 @@
+{% extends 'app/base.html' %} {% block content %}
+
+<div class="container mx-auto lg:px-16 px-4">
+			<div class="flex flex-col py-4">
+				<!-- Product Card -->
+				<div class="grid lg:gap-x-5 gap-x-4 lg:gap-y-9 gap-y-6 lg:grid-cols-4">
+					{% for post in posts %}
+
+					<div class="bg-white card cursor-pointer flex flex-col">
+						<img src="{{post.images.first.image.url}}" alt="Product Image"
+							onclick="redirectTo('{{post.slug}}')" class="aspect-[1/1] object-cover rounded-2xl mb-4" />
+						<span class="hover:underline text-lg mb-2">
+							{{post.title}}</span>
+
+						<div class="flex text-2xl font-bold justify-between">
+							<div class="flex">
+								<span>₸</span>
+								<p class="currency-text">{{post.price}}</p>
+							</div>
+						</div>
+					</div>
+					{% endfor %}
+
+				</div>
+			</div>
+</div>
+
+{% endblock content %} {% block externals %}
+<script>
+	const deleteFromFav = (id) => {
+		fetch(`/fav_posts/delete/${id}`)
+			.then((response) => response.json())
+			.then((data) => {
+				console.log("Успешно сохранено");
+			});
+
+		document.querySelector(`[post_id="${id}"]`).remove();
+	};
+	document.querySelectorAll(".card").forEach((each, index) => {
+		var deleteButton =
+			document.querySelectorAll(".deleteFromFavBtn")[index];
+		var priceText = document.querySelectorAll(".price")[index];
+		priceText.innerText = formatCurrency(priceText.innerText);
+		deleteButton.addEventListener("click", function (event) {
+			event.preventDefault();
+			event.stopPropagation();
+			deleteFromFav(deleteButton.getAttribute("post_id"));
+		});
+	});
+</script>
+{% endblock externals %}s

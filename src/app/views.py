@@ -136,6 +136,12 @@ def deleteFromFav(request, slug):
     fav.delete()
     return JsonResponse('deleted', safe=False)
 
+class MyPostsPageView(LoginRequiredMixin, ListView):
+    model = Post
+    template_name = 'app/my_posts.html'
+    context_object_name = 'posts'
+    def get_queryset(self):
+        return Post.objects.filter(creator = self.request.user)
 
 class FavPostsPageView(LoginRequiredMixin, ListView):
     model = FavPosts

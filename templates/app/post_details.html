@@ -1,17 +1,9 @@
 {% extends 'app/base.html' %} {% block content %}
-<section class="container mx-auto px-16">
-	<div class="grid grid-cols-12 gap-x-5">
+<section class="container mx-auto px-4">
+	<div class="grid grid-cols-12 gap-x-5 py-4">
 		<!-- Image -->
-		<div class="flex col-span-6 gap-x-3">
-			<div class="flex flex-col w-36 gap-y-3">
-				<img src="/media/{{post.images.first.image}}" alt="" class="aspect-[152/167] rounded-2xl"/>
-				<img src="/media/{{post.images.first.image}}" alt="" class="aspect-[152/167] rounded-2xl"/>
-				<img src="/media/{{post.images.first.image}}" alt="" class="aspect-[152/167] rounded-2xl"/>
-			</div>
-			<div class="flex-1">
-				
-			<img src="/media/{{post.images.first.image}}" alt="" class="h-full rounded-2xl"/>
-			</div>
+		<div class="flex col-span-6 gap-x-3">				
+			<img src="/media/{{post.images.first.image}}" alt="" class="rounded-2xl"/>
 		</div>
 		<!-- Details -->
 		<div class="col-span-6">
@@ -44,6 +36,7 @@
 				</a>
 			</div>
 		</div>
+
 	</div>
 </section>
 {% endblock content %}

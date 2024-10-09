@@ -23,29 +23,36 @@
 
 					<!-- Скрытое поле для поискового запроса -->
 					<input hidden name="q" id="filter-search-query" value="{{ search_query|default_if_none:'' }}">
-					
+
 					<!-- Категории и подкатегории -->
 					<span class="text-lg" lang-data="category">Categories</span>
 					<ul class="text-[#0089D0] flex flex-col gap-y-3">
 						{% get_categories as categories %}
 						{% for category in categories %}
-							<li>
-								<div class="flex items-center gap-x-2">
-									<button type="button" class="toggle-btn" data-target="subMenu{{ category.key }}" onclick="toggleMenu(event)">
-										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5 bg-white rounded-full border text-gray-500">
-											<path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-										</svg>
-									</button>
-									<label >
+						<li>
+							<div class="flex items-center gap-x-2">
+								<button type="button" class="toggle-btn" data-target="subMenu{{ category.key }}"
+									onclick="toggleMenu(event)">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+										class="size-5 bg-white rounded-full border text-gray-500">
+										<path fill-rule="evenodd"
+											d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z"
+											clip-rule="evenodd" />
+									</svg>
+								</button>
+								<label>
 
 
-                                        <input type="checkbox" {% if category.name in categories_chosen or not page_type or redirected%}checked {% endif %} class="category-checkbox" data-category="{{ category.id }}" value="{{category.name}}" data-target="subMenu{{ category.key }}" name="category" >
-										<span lang-data="{{category.key}}">{{category.name}}</span>
+									<input type="checkbox" {% if category.name in categories_chosen or not page_type or
+										redirected%}checked {% endif %} class="category-checkbox"
+										data-category="{{ category.id }}" value="{{category.name}}"
+										data-target="subMenu{{ category.key }}" name="category">
+									<span lang-data="{{category.key}}">{{category.name}}</span>
 
-									</label>
-								</div>
+								</label>
+							</div>
 
-							</li>
+						</li>
 						{% endfor %}
 					</ul>
 
@@ -53,15 +60,15 @@
 					<span class="text-lg" lang-data="condition">Condition</span>
 					<div class="flex items-center gap-2">
 						<label>
-							<input type="checkbox" class="condition-checkbox" value="new" name="condition"
-								{% if 'new' in conditions_chosen or not page_type or redirected%}checked{% endif %}>
+							<input type="checkbox" class="condition-checkbox" value="new" name="condition" {% if 'new'
+								in conditions_chosen or not page_type or redirected%}checked{% endif %}>
 							<span lang-data="new">New</span>
 						</label>
 					</div>
 					<div class="flex items-center gap-2">
 						<label>
-							<input type="checkbox" class="condition-checkbox" value="used" name="condition"
-								{% if 'used' in conditions_chosen or not page_type or redirected %}checked{% endif %}>
+							<input type="checkbox" class="condition-checkbox" value="used" name="condition" {% if 'used'
+								in conditions_chosen or not page_type or redirected %}checked{% endif %}>
 							<span lang-data="used">Used</span>
 						</label>
 					</div>
@@ -74,20 +81,20 @@
 
 
 			<div class="col-span-3 flex flex-col">
-				
+
 
 				<span>Найдено: {{posts_count}}</span>
 				<div class="grid  grid-cols-3 border-l">
 					{% for post in posts %}
 
-					<div
-						class="bg-white card cursor-pointer flex flex-col px-3 py-4 gap-y-3 border-b border-r">
-						<img src="{% if post.images.first.image.url %}{{post.images.first.image.url}}{% else %}https://www.buhuslugi.by/wp-content/themes/consultix/images/no-image-found-360x250.png {% endif %}" alt="Product Image" onclick="redirectTo('{{post.slug}}')"
+					<div class="bg-white card cursor-pointer flex flex-col px-3 py-4 gap-y-3 border-b border-r">
+						<img src="{% if post.images.first.image.url %}{{post.images.first.image.url}}{% else %}https://www.buhuslugi.by/wp-content/themes/consultix/images/no-image-found-360x250.png {% endif %}"
+							alt="Product Image" onclick="redirectTo('{{post.slug}}')"
 							class="h-48 object-cover rounded" />
 						<hr>
 						<div class="flex flex-col gap-y-3">
-								<span class="flex text-sm cursor-pointer hover:underline h-10">
-									{{post.title}} - {{post.condition}}</span>
+							<span class="flex text-sm cursor-pointer hover:underline h-10">
+								{{post.title}} - {{post.condition}}</span>
 							<div class="flex justify-between text-xs text-gray-600">
 								<span class="created_at" date_input='{{post.created_at.date|date:"Y-m-d"}}'
 									date_input_alternative='{{post.created_at.date}}' time="{{post.created_at.time}}">
@@ -111,7 +118,8 @@
 
 								</label>
 								{% else %}
-								<label class="inline-flex cursor-pointer items-center heart-icon" post_slug="{{post.slug}}">
+								<label class="inline-flex cursor-pointer items-center heart-icon"
+									post_slug="{{post.slug}}">
 
 									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
 										stroke-width="1.5" stroke="currentColor" class="size-5">
@@ -122,9 +130,9 @@
 								</label>
 								{% endif %}
 								{% if post.creator == request.user %}
-					<a href="{% url 'app:edit-post' post.slug  %}">Edit</a>
-					<a href="{% url 'app:delete-post' post.slug  %}">Delete</a>
-					{% endif %}
+								<a href="{% url 'app:edit-post' post.slug  %}">Edit</a>
+								<a href="{% url 'app:delete-post' post.slug  %}">Delete</a>
+								{% endif %}
 							</div>
 						</div>
 					</div>
@@ -137,12 +145,12 @@
 						{% if page_obj.has_previous %}
 						<div class="grid grid-cols-3">
 							<a class="bg-[#FFBA24] text-center py-2 rounded block"
-							   href="?q={{ search_query }}&{% for condition in conditions_chosen %}condition={{ condition }}&{% endfor %}{% for category in categories_chosen %}category={{ category }}&{% endfor %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}page=1">
+								href="?q={{ search_query }}&{% for condition in conditions_chosen %}condition={{ condition }}&{% endfor %}{% for category in categories_chosen %}category={{ category }}&{% endfor %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}page=1">
 								&laquo; First
 							</a>
 							<div></div>
 							<a class="bg-[#FFBA24] text-center py-2 rounded block"
-							   href="?q={{ search_query }}&{% for condition in conditions_chosen %}condition={{ condition }}&{% endfor %}{% for category in categories_chosen %}category={{ category }}&{% endfor %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}page={{ page_obj.previous_page_number }}">
+								href="?q={{ search_query }}&{% for condition in conditions_chosen %}condition={{ condition }}&{% endfor %}{% for category in categories_chosen %}category={{ category }}&{% endfor %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}page={{ page_obj.previous_page_number }}">
 								Previous
 							</a>
 						</div>
@@ -157,12 +165,12 @@
 						{% if page_obj.has_next %}
 						<div class="grid grid-cols-3">
 							<a class="bg-[#FFBA24] text-center py-2 rounded block"
-							   href="?q={{ search_query }}&{% for condition in conditions_chosen %}condition={{ condition }}&{% endfor %}{% for category in categories_chosen %}category={{ category }}&{% endfor %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}page={{ page_obj.next_page_number }}">
+								href="?q={{ search_query }}&{% for condition in conditions_chosen %}condition={{ condition }}&{% endfor %}{% for category in categories_chosen %}category={{ category }}&{% endfor %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}page={{ page_obj.next_page_number }}">
 								Next
 							</a>
 							<div></div>
 							<a class="bg-[#FFBA24] text-center py-2 rounded block"
-							   href="?q={{ search_query }}&{% for condition in conditions_chosen %}condition={{ condition }}&{% endfor %}{% for category in categories_chosen %}category={{ category }}&{% endfor %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}page={{ page_obj.paginator.num_pages }}">
+								href="?q={{ search_query }}&{% for condition in conditions_chosen %}condition={{ condition }}&{% endfor %}{% for category in categories_chosen %}category={{ category }}&{% endfor %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}page={{ page_obj.paginator.num_pages }}">
 								Last &raquo;
 							</a>
 						</div>
@@ -235,39 +243,39 @@
 
 </script>
 <script>
-	document.addEventListener('DOMContentLoaded', function() {
+	document.addEventListener('DOMContentLoaded', function () {
 		const searchInput = document.getElementById('default-search');
-    const filterSearchQueryInput = document.getElementById('filter-search-query');
+		const filterSearchQueryInput = document.getElementById('filter-search-query');
 
-    // При изменении значения в поисковой форме, копируем это значение в скрытое поле формы фильтрации
-    searchInput.addEventListener('input', function() {
-        filterSearchQueryInput.value = searchInput.value;
-    });
+		// При изменении значения в поисковой форме, копируем это значение в скрытое поле формы фильтрации
+		searchInput.addEventListener('input', function () {
+			filterSearchQueryInput.value = searchInput.value;
+		});
 
-    // Логика добавления фильтров в форму поиска остаётся прежней
-    const searchForm = document.getElementById('search-form');
-    const filterForm = document.querySelector('.filter-form');
+		// Логика добавления фильтров в форму поиска остаётся прежней
+		const searchForm = document.getElementById('search-form');
+		const filterForm = document.querySelector('.filter-form');
 
-    function addFiltersToSearchForm() {
-        // Удаляем старые скрытые поля
-        const oldInputs = searchForm.querySelectorAll('input[type="hidden"]');
-        oldInputs.forEach(input => input.remove());
+		function addFiltersToSearchForm() {
+			// Удаляем старые скрытые поля
+			const oldInputs = searchForm.querySelectorAll('input[type="hidden"]');
+			oldInputs.forEach(input => input.remove());
 
-        // Копируем выбранные фильтры в форму поиска
-        const filterInputs = filterForm.querySelectorAll('input:checked');
-        filterInputs.forEach(input => {
-            const hiddenInput = document.createElement('input');
-            hiddenInput.type = 'hidden';
-            hiddenInput.name = input.name;
-            hiddenInput.value = input.value;
-            searchForm.appendChild(hiddenInput);
-        });
-    }
+			// Копируем выбранные фильтры в форму поиска
+			const filterInputs = filterForm.querySelectorAll('input:checked');
+			filterInputs.forEach(input => {
+				const hiddenInput = document.createElement('input');
+				hiddenInput.type = 'hidden';
+				hiddenInput.name = input.name;
+				hiddenInput.value = input.value;
+				searchForm.appendChild(hiddenInput);
+			});
+		}
 
-    // При отправке формы поиска добавляем фильтры
-    searchForm.addEventListener('submit', addFiltersToSearchForm);
+		// При отправке формы поиска добавляем фильтры
+		searchForm.addEventListener('submit', addFiltersToSearchForm);
 
-   });
+	});
 
 </script>
 {% endblock externals %}
