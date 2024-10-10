@@ -21,8 +21,8 @@
 			<!-- Price -->
 			<div class="mb-4">
 				<label class="mb-2 block font-bold text-gray-700" for="price">Price ($)</label>
-				<div class="sr-only">{{form.price}}</div>
-				{% if page == 'edit' %}
+				<div class="sr-only" hidden>{{form.price}}</div>
+				{% if form.instance.pk %}
 				<input type="text" class="currency-input" oninput="format_number(this)" maxlength="9"
 					value="{{post.price}}">
 				{% else %}
@@ -41,19 +41,55 @@
 				<label class="mb-2 block font-bold text-gray-700" for="price">Block</label>
 				{{form.block}}
 			</div>
-			{% for category in categories %}
-			<select name="" id="">
-				{% for subcategory in category.subcategories.all %}
-									<option>{{ subcategory.name }}</option>
-								{% endfor %}
-			</select>
-			{% endfor %}
-			
-			<input type="file" name="files" class="files" multiple accept=".png, .jpg, .jpeg">
+<!--			-->
+
+<input type="file" name="files" class="files" multiple accept=".png, .jpg, .jpeg" onchange="previewImages()">
+<div id="imagePreviewContainer" class="image-preview-container"></div>
+
+<style>.image-preview-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.image-preview {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: move;
+}
+
+.image-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.remove-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+}
+
+.image-preview.is-primary {
+    border: 2px solid green;
+}
+</style>
+
 			<div class="text-center">
 
 				<input type="submit" value="Submit" />
-			
+
 			</div>
 
 
@@ -64,7 +100,83 @@
 {% endblock content %}
 {% block externals %}
 <link rel="stylesheet" href="{% static 'css/drag.css'%}">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+
 <script>
+	let draggedElementIndex = null; // Сохраняем индекс перетаскиваемого элемента
+
+function previewImages() {
+    const imagePreviewContainer = document.getElementById("imagePreviewContainer");
+    const files = document.querySelector('.files').files;
+    imagePreviewContainer.innerHTML = ''; // Очищаем контейнер перед добавлением новых превью
+
+    Array.from(files).forEach((file, index) => {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            const preview = document.createElement("div");
+            preview.classList.add("image-preview");
+
+            const img = document.createElement("img");
+            img.src = e.target.result;
+
+            const removeButton = document.createElement("button");
+            removeButton.classList.add("remove-btn");
+            removeButton.innerHTML = "x";
+            removeButton.onclick = () => removeImage(index);
+
+            preview.appendChild(img);
+            preview.appendChild(removeButton);
+            imagePreviewContainer.appendChild(preview);
+
+            // Устанавливаем первое изображение как primary
+            if (index === 0) {
+                preview.classList.add("is-primary");
+            }
+        }
+
+        reader.readAsDataURL(file);
+    });
+
+    // Инициализируем Sortable.js для drag-and-drop
+    new Sortable(imagePreviewContainer, {
+        animation: 150,
+        onEnd: function (/**Event*/evt) {
+            updatePrimaryStatus(); // Обновляем статус primary при изменении порядка
+        }
+    });
+}
+
+// Удаление изображения
+function removeImage(index) {
+    const fileInput = document.querySelector('.files');
+    const dataTransfer = new DataTransfer();
+
+    // Добавляем все файлы, кроме удаляемого
+    Array.from(fileInput.files).forEach((file, i) => {
+        if (i !== index) {
+            dataTransfer.items.add(file);
+        }
+    });
+
+    fileInput.files = dataTransfer.files;
+    previewImages(); // Обновляем превью
+}
+
+// Обновление статуса primary для первого изображения
+function updatePrimaryStatus() {
+    const previews = document.querySelectorAll('.image-preview');
+
+    // Снимаем статус primary со всех
+    previews.forEach(preview => preview.classList.remove("is-primary"));
+
+    // Первому элементу добавляем статус primary
+    if (previews.length > 0) {
+        previews[0].classList.add("is-primary");
+    }
+}
+
+
 	IMask(
 		document.querySelector('.currency-input'),
 		{
@@ -77,10 +189,74 @@
 			}
 		}
 	);
-	const format_number = (el) => {
-		document.querySelector('[name="price"]').value = el.value.replace(/[^0-9+-]/g, '');
-		console.log(el.value.replace(/[^0-9+-]/g, ''))
-	}
+	var cash = {};
+
+const format_number = (el) => {
+    document.querySelector('[name="price"]').value = el.value.replace(/[^0-9+-]/g, '');
+    console.log(el.value.replace(/[^0-9+-]/g, ''));
+}
+
+// async function fetchSubCategories(id) {
+//     // Проверка, есть ли данные в cash
+//     if (cash[id]) {
+//         console.log("Используем кэшированные данные:", cash[id]);
+//         return cash[id];
+//     }
+
+//     // Если данных нет, делаем запрос
+//     const subCategoriesResponse = await fetch("/get_sub_categories/" + id);
+//     const subCategories = await subCategoriesResponse.json();
+
+//     // Сохраняем результат в кэш
+//     cash[id] = subCategories;
+//     return subCategories;
+// }
+
+// const createSubCategorySelect = (subCategories) => {
+//     // Удаляем старый селект с подкатегориями, если он существует
+//     const existingSubCategorySelect = document.querySelector("#subCategorySelect");
+//     if (existingSubCategorySelect) {
+//         existingSubCategorySelect.remove();
+//     }
+
+//     // Создаем новый select элемент
+//     const subCategorySelect = document.createElement("select");
+//     subCategorySelect.id = "subCategorySelect";
+//     subCategorySelect.name = "sub_category";
+
+//     // Добавляем опции в select
+// 	var tempIndexOfDefault = 0;
+// 	var tempOption;
+//     subCategories.forEach((subCategory, index) => {
+//         const option = document.createElement("option");
+// 		option.value = subCategory.id;
+//         option.textContent = subCategory.name;
+
+// 		if (subCategory.name == 'default'){
+// 			tempIndexOfDefault = index
+// 			console.log(tempIndexOfDefault)
+// 		}
+//         subCategorySelect.appendChild(option);
+//     });
+// 	tempOption = subCategorySelect.querySelectorAll('option')[0]
+// 	console.log(tempOption, subCategorySelect.querySelectorAll('option')[tempIndexOfDefault])
+// 	// subCategorySelect.querySelectorAll('option')[0].value = subCategorySelect.querySelectorAll('option')[tempIndexOfDefault].value
+// 	// subCategorySelect.querySelectorAll('option')[0].textContent = subCategorySelect.querySelectorAll('option')[tempIndexOfDefault].textContent
+// 	// subCategorySelect.querySelectorAll('option')[tempIndexOfDefault].value = tempOption.value
+// 	// subCategorySelect.querySelectorAll('option')[tempIndexOfDefault].textContent = tempOption.textContent
+
+//     // Добавляем новый select рядом с основным селектом категории
+//     const categorySelect = document.querySelector("#id_category");
+//     categorySelect.insertAdjacentElement("afterend", subCategorySelect);
+// }
+
+// const select = document.querySelector("#id_category");
+// select.addEventListener("change", () => {
+//     fetchSubCategories(select.value).then(subCategories => {
+//         createSubCategorySelect(subCategories); // Создаем селект для подкатегорий
+//     });
+// });
+
 </script>
 <script src="{% static 'js/drag.js'%}"></script>
 {% endblock externals %}

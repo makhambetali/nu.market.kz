@@ -1,5 +1,5 @@
 from django import template
-from src.app.models import FavPosts
+from src.app.models import FavPosts, Category
 from django.db.models import Q
 from django.contrib.humanize.templatetags.humanize import intcomma
 #is_liked_by_user
@@ -15,6 +15,11 @@ def to_int(value):
         return int(value)
     except (ValueError, TypeError):
         return 0  # или None, или любое другое значение по умолчанию
+
+@register.simple_tag
+def get_categories():
+    return Category.objects.all()
+
 def currency(dollars):
     dollars = round(float(dollars), 2)
     return "%s" % (intcomma(int(dollars)))

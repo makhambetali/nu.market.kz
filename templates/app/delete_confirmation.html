@@ -1,0 +1,64 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block content %}
+<div class="delete-confirm">
+    <h2>Подтверждение</h2>
+    <p>Вы действительно хотите удалить "{{ object }}"? <b>Все данные, связанные с ним, будут утеряны без возможности восстановления.</b></p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="confirm-button" >Удалить</button>
+        <a href="{% url 'app:home-page' %}" class="cancel-link">Отменить</a>
+
+    </form>
+</div>
+{% endblock %}
+
+{% block externals %} 
+<style>
+
+/* Example custom CSS for delete confirmation */
+.delete-confirm {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: #f8f9fa;
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+.delete-confirm h2 {
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+
+.delete-confirm p {
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.delete-confirm button,
+.delete-confirm a {
+    padding: 10px 20px;
+    margin-right: 10px;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+}
+
+.confirm-button {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.cancel-link {
+    background-color: #d3d9df;
+    color: #333;
+}
+
+
+</style>
+{% endblock externals %} 

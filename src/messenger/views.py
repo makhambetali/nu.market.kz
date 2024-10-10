@@ -1,9 +1,10 @@
 from django.shortcuts import render
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from .models import Message
 
 users = []
+User = get_user_model()
 @login_required
 def private_chat(request, user1 = 0, user2 = 0):
     room = f"{user1}-{user2}" if user1 < user2 else f"{user2}-{user1}"

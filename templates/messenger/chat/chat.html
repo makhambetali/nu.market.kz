@@ -47,11 +47,7 @@
 						<div
 							class="rounded-lg {% if message.username == request.user.username %}bg-blue-600 text-white{% else %}bg-blue-100{% endif %} p-4">
 							<p class="text-sm">{{ message.message }}</p>
-							{% if message.username == request.user.username%}
-							<script>
-								alert();
-							</script>
-							{% endif %}
+						
 							<span class="text-xs text-gray-500">{{ message.timestamp|date:"H:i" }}</span>
 						</div>
 					</div>

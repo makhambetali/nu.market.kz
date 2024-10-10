@@ -29,7 +29,7 @@
 			>
 		</div>
 
-		<form class="flex-1 relative lg:flex hidden">
+		<form class="flex-1 relative lg:flex hidden" method="get" action="{% url 'app:home-page-filter' %}" id="search-form">
 				<div
 					class="absolute inset-y-0 start-0 flex items-center ps-4 pointer-events-none"
 				>
@@ -49,13 +49,15 @@
 						/>
 					</svg>
 				</div>
-				<input
-					type="search"
-					id="default-search"
-					class="block w-full !pl-11 py-3 rounded-full border-0 !bg-[#F0F0F0]"
-					placeholder="Search for products..."
-					required
-				/>
+				
+
+				<input type="search" id="default-search" name="q"
+							class="block w-full p-3 pl-10 text-sm border-0 bg-white" placeholder="Search..."
+							value="{{ search_query|default_if_none:'' }}"/>
+							{% if not posts_count %}
+				<input hidden name="redirect" id="" value="True">
+				{% endif %}
+				<button type="submit" hidden>go</button>
 		</form>
 
 		<div class="flex items-center gap-x-3">
@@ -129,7 +131,7 @@
 				type="button"
 			>
 				<img
-					src="/media/{{request.user.profile.image}}"
+			
 					alt=""
 					class="bg-gray-400 size-8 rounded-full object-cover"
 				/>
@@ -146,7 +148,7 @@
 				>
 					<li>
 						<a
-							href="{% url 'app:profile-page'%}"
+							href="{% url 'users:profile'%}"
 							class="block px-4 py-2 hover:bg-gray-100 profile_link"
 							>Profile</a
 						>
@@ -189,7 +191,7 @@
 									<a
 										href="#"
 										class="block px-4 py-2 hover:bg-gray-100 english_button change_language_button"
-										language="english"
+										language="en"
 										>English</a
 									>
 								</li>
@@ -197,7 +199,7 @@
 									<a
 										href="#"
 										class="block px-4 py-2 hover:bg-gray-100 russian_button change_language_button"
-										language="russian"
+										language="ru"
 										>Russian</a
 									>
 								</li>
@@ -207,11 +209,10 @@
 				</ul>
 				<ul>
 					<li class="py-2">
-						<a
-							href="{% url 'users:logout' %}"
-							class="block px-4 py-2 hover:bg-gray-100 signout_link"
-							>Sign out</a
-						>
+						<form method="post" action="{% url 'users:logout' %}">
+							{% csrf_token %}
+							<button type="submit">logout</button>
+						</form>
 					</li>
 				</ul>
 			</div>

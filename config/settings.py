@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-axettocg=3*#(g1kng@^5)*6mvy*kmgg_f+!q)%=bkb(=-n38^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['192.168.0.184', '127.0.0.1']
 
 
 # Application definition
@@ -38,12 +38,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'daphne',
     'django.contrib.staticfiles',
-    'src.app',
     'src.users',
+    'src.app',
     'tailwind',
     'theme',
     'channels',
     'src.messenger',
+    'django.contrib.humanize',
+    
+    # 'users.apps.UsersConfig',
     
 ]
 TAILWIND_APP_NAME = 'theme'
@@ -92,7 +95,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "nu.market",
+        "NAME": "market",
         "USER": "postgres",
         "PASSWORD": "123",
         "HOST": "localhost",
@@ -157,18 +160,33 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'static')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-LOGIN_URL = '/accounts/login'
-
 ASGI_APPLICATION = 'config.asgi.application'
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels.layers.InMemoryChannelLayer"
     }
 }
+LOGIN_REDIRECT_URL = 'app:home-page'
+LOGOUT_REDIRECT_URL = 'app:home-page'
+LOGIN_URL = 'users:login'
 
-DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
-    }
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'users.authentication.EmailAuthBackend',
+]
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+EMAIL_HOST = "smtp.yandex.ru"
+EMAIL_PORT = 465
+EMAIL_HOST_USER = "djangocourse@yandex.ru"
+EMAIL_HOST_PASSWORD = "bnufhkwcripaunvu"
+EMAIL_USE_SSL = True
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SERVER_EMAIL = EMAIL_HOST_USER
+EMAIL_ADMIN = EMAIL_HOST_USER
+
+AUTH_USER_MODEL = 'users.User'
+
+DEFAULT_USER_IMAGE = STATIC_URL + 'profile_images/default.png'
