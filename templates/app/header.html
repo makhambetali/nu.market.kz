@@ -1,16 +1,42 @@
 {% load static %}
-<nav class="text-black container mx-auto lg:px-16 px-4">
-	<div class="flex items-center gap-x-8 lg:py-4 py-5 border-b">
-		<a href="{% url 'app:home-page' %}">
-			<img src="{% static 'system_images/SHOP.CO.png' %}" alt="" />
-		</a>
+<nav class="container mx-auto lg:px-16 px-4">
+	<div class="flex items-center lg:gap-x-10 py-4 border-b justify-between">
+		<div class="flex gap-x-4">
+			<button type="button" onclick="changeMenu()">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 lg:hidden shrink-0">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+				  </svg>
+			</button>		  
+			<a href="{% url 'app:home-page' %}">
+				<img src="{% static 'system_images/SHOP.CO.png' %}" alt="" />
+			</a>
+		</div>
 
+		<div class="absolute top-0 left-0 bg-white h-screen w-full hidden z-20" id="menu">
+			<div class="flex flex-col p-4 gap-y-2">
+				<button onclick="changeMenu()" class="">
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+					  </svg>					  
+				</button>
+				<div class="flex gap-x-2 items-center">
+					{% if user.photo %}
+					<img src="{{ user.photo.url }}" alt="" class="bg-gray-400 size-10 rounded-full object-cover" />
+					{% else %}
+					<img src="{{ default_image }}" alt="" class="bg-gray-400 size-10 rounded-full object-cover" />
+					{% endif %}
+				</div>
+				<a href="{% url 'users:profile'%}">{{ user }}</a>
+				<a href="{% url 'app:post-page' %}" class="hover:underline post_an_item_link">Post an Item</a>
+				<form method="post" action="{% url 'users:logout' %}">
+					{% csrf_token %}
+					<button type="submit" class="hover:underline">Logout</button>
+				</form>
+			</div>
+		</div>
 
-		<div class="lg:flex items-center gap-x-3 hidden">
+		<div class="lg:flex items-center gap-x-6 hidden">
 			<a href="{% url 'app:post-page' %}" class="hover:underline post_an_item_link">Post an Item</a>
-			<a href="{% url 'app:post-page' %}" class="hover:underline post_an_item_link">On Sale</a>
-			<a href="{% url 'app:post-page' %}" class="hover:underline post_an_item_link">New Arrivals</a>
-			<a href="{% url 'app:post-page' %}" class="hover:underline post_an_item_link">Brands</a>
 		</div>
 
 		<form class="flex-1 relative lg:flex hidden" method="get" action="{% url 'app:home-page-filter' %}"
@@ -24,7 +50,8 @@
 			</div>
 
 
-			<input type="search" id="default-search" name="q" class="block w-full p-3 pl-10 text-sm border-0 bg-white"
+			<input type="search" id="default-search" name="q"
+				class="block w-full pe-4 py-2.5 pl-10 text-sm border-0 !bg-[#F0F0F0] rounded-full"
 				placeholder="Search..." value="{{ search_query|default_if_none:'' }}" />
 			{% if not posts_count %}
 			<input hidden name="redirect" id="" value="True">
@@ -33,15 +60,6 @@
 		</form>
 
 		<div class="flex items-center gap-x-3">
-
-			<a href="{% url 'app:liked-page' %}">
-				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-					stroke="currentColor" class="size-6">
-					<path stroke-linecap="round" stroke-linejoin="round"
-						d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-				</svg>
-
-			</a>
 			<a href="{% url 'app:liked-page' %}">
 				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
 					stroke="currentColor" class="size-6">
@@ -57,24 +75,28 @@
 							d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z" />
 					</svg>
 					<div
-						class="absolute text-white -top-1 -right-1 bg-black size-4 rounded-full text-xs flex items-center justify-center">
+						class="absolute -top-1 text-white -right-1 bg-[#000000] size-4 rounded-full text-xs flex items-center justify-center">
 						1
 					</div>
 				</div>
 			</a>
 		</div>
-		<div class="text-sm flex justify-between items-center">
+		<div class="text-sm justify-between items-center hidden lg:flex">
 			{% if not request.user.is_authenticated %}
 			<a href="{% url 'users:login' %}" class="ps-3 hover:underline signin_link">Sign In</a>
 			{% else %}
-			<button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" data-dropdown-offset-distance="1"
-				data-dropdown-offset-skidding="-52" class="flex items-center" type="button">
-				<img alt="" class="bg-gray-400 size-8 rounded-full object-cover" />
+			<button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" data-dropdown-offset-distance="16"
+				data-dropdown-offset-skidding="-60" class="flex items-center" type="button">
+				{% if user.photo %}
+				<img src="{{ user.photo.url }}" alt="" class="bg-gray-400 size-10 rounded-full object-cover" />
+				{% else %}
+				<img src="{{ default_image }}" alt="" class="bg-gray-400 size-10 rounded-full object-cover" />
+				{% endif %}
 			</button>
 
 			<!-- Dropdown menu -->
 			<div id="dropdown"
-				class="z-10 hidden bg-white divide-gray-100 rounded-b-md w-40 border border-t-0 divide-y">
+				class="z-10 hidden bg-white divide-gray-100 rounded-b-md w-40 border divide-y">
 				<ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
 					<li>
 						<a href="{% url 'users:profile'%}"
@@ -111,7 +133,7 @@
 					<li class="py-2">
 						<form method="post" action="{% url 'users:logout' %}">
 							{% csrf_token %}
-							<button type="submit">logout</button>
+							<button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-100">Logout</button>
 						</form>
 					</li>
 				</ul>
@@ -120,3 +142,13 @@
 		</div>
 	</div>
 </nav>
+<script>
+	function changeMenu() {
+	var x = document.getElementById("menu");
+	if (x.style.display === "flex") {
+		x.style.display = "none";
+	} else {
+		x.style.display = "flex";
+	}
+	}
+</script>

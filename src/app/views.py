@@ -33,20 +33,23 @@ class HomeMixin(ListView):
     model = Post
     template_name = 'app/home.html'
     context_object_name = 'posts'
-    paginate_by = 12
+    paginate_by = 3
 
 
 class HomePageView(HomeMixin):
-    queryset = Post.objects.order_by('-created_at')
-
+    def get_queryset(self):
+        # Access the request.user in the method
+        if self.request.user.is_authenticated:
+            return Post.objects.order_by('-created_at').exclude(creator=self.request.user)
+        else:
+            return Post.objects.order_by('-created_at')
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
             'today': timezone.now().date(),
-            'posts_count': self.get_queryset().count()
+            'posts_count': self.get_queryset().count(),
         })
         return context
-
 
 class FilterHomePage(HomeMixin):
     def get_queryset(self):
@@ -54,8 +57,11 @@ class FilterHomePage(HomeMixin):
         self.categories_list = self.request.GET.getlist("category")
         self.conditions_list = self.request.GET.getlist("condition")
         self.search_query = self.request.GET.get('q')
-
-        queryset = Post.objects
+        if self.request.user.is_authenticated:
+            queryset = Post.objects.order_by('-created_at').exclude(creator=self.request.user)
+        else:
+            queryset =  Post.objects.order_by('-created_at')
+        # queryset = Post.objects.exclude(creator = self.request.user)
 
         if self.categories_list or self.conditions_list:
             queryset = queryset.filter(
@@ -88,6 +94,7 @@ class PostMixin(LoginRequiredMixin):
     def form_valid(self, form):
         form_instance = form.save(commit=False)
         form_instance.creator = self.request.user
+        print("qqqq", form_instance.category)
         form_instance.save()
 
         if self.action == 'edit':
@@ -121,7 +128,11 @@ class DetailPageView(DetailView):
     model = Post
     template_name = "app/post_details.html"
     context_object_name = 'post'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['related_posts'] = Post.objects.filter(category = self.get_object().category).exclude(slug = self.get_object().slug)
 
+        return context
 
 @login_required
 def addToFav(request, slug):

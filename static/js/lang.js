@@ -1,7 +1,7 @@
 var langArr = {
-    'category':{
-        'ru': 'Категории',
-        'en': 'Categories'
+    'filters':{
+        'ru': 'Фильтры',
+        'en': 'Filters'
     },
     'condition': {
         'ru': 'Состояние',

@@ -2,54 +2,112 @@
 {% block content %}
 {% load static %}
 {% load custom_tag %}
-<style>
-	hr {
-		border-color: #e5e5e5;
-	}
-</style>
+	<div class="lg:grid flex flex-col gap-x-5 py-5 lg:grid-cols-12 lg:py-6">
+			<div class="flex justify-end lg:hidden">
+				<button type="button" class="flex justify-center items-center size-8 bg-[#F0F0F0] rounded-full" onclick="changeFilter()">
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M6 13.5V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m12-3V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m-6-9V3.75m0 3.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 9.75V10.5" />
+					  </svg>
+				</button>
+				<div class="absolute top-[57px] left-0 bg-white h-screen w-full hidden" id="aside">
+					<aside class="lg:col-span-3 w-full">
+						<form method="get" action="{% url 'app:home-page-filter' %}"
+							class="filter-form flex flex-col gap-y-6 lg:border px-6 pt-5 pb-6 rounded-2xl">
+		
+							<!-- Скрытое поле для поискового запроса -->
+							<input hidden name="q" id="filter-search-query" value="{{ search_query|default_if_none:'' }}">
+		
+							<!-- Категории и подкатегории -->
+							<div class="flex justify-between">
+								<span class="text-xl font-bold" lang-data="filters">Filters</span>
+								<button type="button" onclick="changeFilter()">X</button>
+							</div>
+							<hr>
+							<ul class="text-[#666666] flex flex-col gap-y-3">
+								{% get_categories as categories %}
+								{% for category in categories %}
+								<li>
+									<div class="flex items-center justify-between">
+										<label class="inline-flex items-center cursor-pointer">
+											<input type="checkbox" 
+											{% if category.name in categories_chosen or not page_type or redirected%} checked {% endif %} class="sr-only peer"
+												data-category="{{ category.id }}" value="{{category.name}}"
+												data-target="subMenu{{ category.key }}" name="category">
+											<span lang-data="{{category.key}}" class="peer-checked:text-[#000000] peer-checked:font-bold">{{category.name}}</span>
+										</label>
+										<!-- <button type="button" class="toggle-btn" data-target="subMenu{{ category.key }}"
+										onclick="toggleMenu(event)">
+										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+											class="size-5 bg-white rounded-full border text-gray-500">
+											<path fill-rule="evenodd"
+												d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z"
+												clip-rule="evenodd" />
+										</svg>
+										</button> -->
+									</div>
+		
+								</li>
+								{% endfor %}
+							</ul>
+		
+							<!-- Условия -->
+							<hr>
+							<div class="flex flex-col gap-y-5">
+								<span class="text-xl font-bold" lang-data="condition">Condition</span>
+							
+							<div class="flex items-center gap-2">
+		
+								<label class="inline-flex items-center cursor-pointer">
+									<input type="checkbox" value="new" name="condition" class="sr-only peer"
+									{% if 'new' in conditions_chosen or not page_type or redirected%}checked{% endif %}>
+									<div class="text-sm font-medium px-5 py-2.5 text-[#666666] bg-[#F0F0F0] rounded-full peer peer-checked:bg-[#000000] peer-checked:text-white"><span lang-data="new">New</span></div>
+								</label>
+		
+								<label class="inline-flex items-center cursor-pointer">
+									<input type="checkbox" value="used" name="condition" class="sr-only peer"
+									{% if 'used' in conditions_chosen or not page_type or redirected %}checked{% endif %}>
+									<div class="text-sm font-medium px-5 py-2.5 text-[#666666] bg-[#F0F0F0] rounded-full peer peer-checked:bg-[#000000] peer-checked:text-white"><span lang-data="new">Used</span></div>
+								</label>
+		
+							</div>
+							</div>
+							<button type="submit" class="py-3 !bg-[#000000] rounded-full text-white">Apply Filter</button>
+						</form>
+					</aside>
+				</div>
+			</div>
 
-<div class="container mx-auto">
-	<div class="grid grid-cols-8 py-4">
-		<!-- Filters Section -->
-		<div>
-		</div>
-
-		<!-- Product Listings Section -->
-		<div class="col-span-6 grid grid-cols-4">
-
-			<aside class="font-medium">
+			<aside class="lg:col-span-3 hidden lg:block">
 				<form method="get" action="{% url 'app:home-page-filter' %}"
-					class="text-sm filter-form flex flex-col gap-y-3 me-4">
+					class="filter-form flex flex-col gap-y-6 border px-6 pt-5 pb-6 rounded-2xl">
 
 					<!-- Скрытое поле для поискового запроса -->
 					<input hidden name="q" id="filter-search-query" value="{{ search_query|default_if_none:'' }}">
 
 					<!-- Категории и подкатегории -->
-					<span class="text-lg" lang-data="category">Categories</span>
-					<ul class="text-[#0089D0] flex flex-col gap-y-3">
+					<span class="text-xl font-bold" lang-data="filters">Filters</span>
+					<hr>
+					<ul class="text-[#666666] flex flex-col gap-y-3">
 						{% get_categories as categories %}
 						{% for category in categories %}
 						<li>
-							<div class="flex items-center gap-x-2">
-								<button type="button" class="toggle-btn" data-target="subMenu{{ category.key }}"
-									onclick="toggleMenu(event)">
-									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-										class="size-5 bg-white rounded-full border text-gray-500">
-										<path fill-rule="evenodd"
-											d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z"
-											clip-rule="evenodd" />
-									</svg>
-								</button>
-								<label>
-
-
-									<input type="checkbox" {% if category.name in categories_chosen or not page_type or
-										redirected%}checked {% endif %} class="category-checkbox"
+							<div class="flex items-center justify-between">
+								<label class="inline-flex items-center cursor-pointer">
+									<input type="checkbox" 
+									{% if category.name in categories_chosen or not page_type or redirected%} checked {% endif %} class="sr-only peer"
 										data-category="{{ category.id }}" value="{{category.name}}"
 										data-target="subMenu{{ category.key }}" name="category">
-									<span lang-data="{{category.key}}">{{category.name}}</span>
-
+									<span lang-data="{{category.key}}" class="peer-checked:text-[#000000] peer-checked:font-bold">{{category.name}}</span>
 								</label>
+								<!-- <button type="button" class="toggle-btn" data-target="subMenu{{ category.key }}"
+								onclick="toggleMenu(event)">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+									class="size-5 bg-white rounded-full border text-gray-500">
+									<path fill-rule="evenodd"
+										d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z"
+										clip-rule="evenodd" />
+								</svg>
+								</button> -->
 							</div>
 
 						</li>
@@ -57,55 +115,61 @@
 					</ul>
 
 					<!-- Условия -->
-					<span class="text-lg" lang-data="condition">Condition</span>
+					<hr>
+					<div class="flex flex-col gap-y-5">
+						<span class="text-xl font-bold" lang-data="condition">Condition</span>
+					
 					<div class="flex items-center gap-2">
-						<label>
-							<input type="checkbox" class="condition-checkbox" value="new" name="condition" {% if 'new'
-								in conditions_chosen or not page_type or redirected%}checked{% endif %}>
-							<span lang-data="new">New</span>
+
+						<label class="inline-flex items-center cursor-pointer">
+							<input type="checkbox" value="new" name="condition" class="sr-only peer"
+							{% if 'new' in conditions_chosen or not page_type or redirected%}checked{% endif %}>
+							<div class="text-sm font-medium px-5 py-2.5 text-[#666666] bg-[#F0F0F0] rounded-full peer peer-checked:bg-[#000000] peer-checked:text-white"><span lang-data="new">New</span></div>
 						</label>
-					</div>
-					<div class="flex items-center gap-2">
-						<label>
-							<input type="checkbox" class="condition-checkbox" value="used" name="condition" {% if 'used'
-								in conditions_chosen or not page_type or redirected %}checked{% endif %}>
-							<span lang-data="used">Used</span>
+
+						<label class="inline-flex items-center cursor-pointer">
+							<input type="checkbox" value="used" name="condition" class="sr-only peer"
+							{% if 'used' in conditions_chosen or not page_type or redirected %}checked{% endif %}>
+							<div class="text-sm font-medium px-5 py-2.5 text-[#666666] bg-[#F0F0F0] rounded-full peer peer-checked:bg-[#000000] peer-checked:text-white"><span lang-data="new">Used</span></div>
 						</label>
+
 					</div>
-					<button type="submit">Filter</button>
+					</div>
+					<button type="submit" class="py-3 !bg-[#000000] rounded-full text-white">Apply Filter</button>
 				</form>
 			</aside>
 
+			<div class="lg:col-span-9">
 
-
-
-
-			<div class="col-span-3 flex flex-col">
-
-
-				<span>Найдено: {{posts_count}}</span>
-				<div class="grid  grid-cols-3 border-l">
-					{% for post in posts %}
-
-					<div class="bg-white card cursor-pointer flex flex-col px-3 py-4 gap-y-3 border-b border-r">
-						<img src="{% if post.images.first.image.url %}{{post.images.first.image.url}}{% else %}https://www.buhuslugi.by/wp-content/themes/consultix/images/no-image-found-360x250.png {% endif %}"
-							alt="Product Image" onclick="redirectTo('{{post.slug}}')"
-							class="h-48 object-cover rounded" />
-						<hr>
-						<div class="flex flex-col gap-y-3">
-							<span class="flex text-sm cursor-pointer hover:underline h-10">
-								{{post.title}} - {{post.condition}}</span>
-							<div class="flex justify-between text-xs text-gray-600">
-								<span class="created_at" date_input='{{post.created_at.date|date:"Y-m-d"}}'
-									date_input_alternative='{{post.created_at.date}}' time="{{post.created_at.time}}">
-								</span>
-
-							</div>
-							<div class="flex text-lg font-semibold justify-between">
+				<div class="flex flex-col">
+					<!-- Product Card -->
+					<div class="grid grid-cols-2 gap-x-4 gap-y-6 lg:grid-cols-3 lg:gap-x-5 lg:gap-y-9 lg:">
+						{% for post in posts %}
+	
+						<div class="bg-white card cursor-pointer flex flex-col">
+							{% has_image post.images.first.image.url as post_image %}
+							
+							<img src="{{post_image}}" alt="Product Image"
+								onclick="redirectTo('{{post.slug}}')" class="aspect-[1/1] object-cover rounded-2xl mb-4" />
+							
+								<!-- {% has_image post.images.first.image.url as post_image %} -->
+							<span class="hover:underline mb-2 lg:text-lg">
+								{{post.title}}</span>
+	
+							<div class="flex text-xl font-bold justify-between items-center mb-2 lg:text-2xl">
 								<div class="flex">
-									<p class="currency-text text tracking-tight">{{post.price}}</p>
-									<span>&nbsp;₸</span>
+									<span>₸</span>
+									<p class="currency-text">{{post.price}}</p>
 								</div>
+	
+								{% if post.creator == request.user %}
+	
+								<a href="{% url 'app:edit-post' post.slug  %}">
+									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 text-[#666666] hover:text-[#000000]">
+										<path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+									  </svg>						
+								</a>
+								{% else %}
 								{% check_for_like request.user.id post.id as is_liked_by_user %}
 								{% if is_liked_by_user %}
 								<label class="inline-flex cursor-pointer items-center heart-icon fill"
@@ -118,8 +182,7 @@
 
 								</label>
 								{% else %}
-								<label class="inline-flex cursor-pointer items-center heart-icon"
-									post_slug="{{post.slug}}">
+								<label class="inline-flex cursor-pointer items-center heart-icon" post_slug="{{post.slug}}">
 
 									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
 										stroke-width="1.5" stroke="currentColor" class="size-5">
@@ -129,62 +192,63 @@
 
 								</label>
 								{% endif %}
-								{% if post.creator == request.user %}
-								<a href="{% url 'app:edit-post' post.slug  %}">Edit</a>
-								<a href="{% url 'app:delete-post' post.slug  %}">Delete</a>
 								{% endif %}
 							</div>
+	
+							<div class="flex justify-between text-xs text-gray-600">
+								<span class="created_at" date_input='{{post.created_at.date|date:"Y-m-d"}}'
+									date_input_alternative='{{post.created_at.date}}' time="{{post.created_at.time}}">
+								</span>
+								<span>Block {{post.block}}</span>
+							</div>
+						</div>
+						{% endfor %}
+	
+					</div>
+	
+					{% if posts_count != 0 %}<div class="pagination">
+						<div class="step-links grid grid-cols-3 items-center">
+							{% if page_obj.has_previous %}
+							<div class="grid grid-cols-3">
+								<a class="bg-[#000000] text-white text-center py-2 rounded block"
+								   href="?q={{ search_query }}&{% for condition in conditions_chosen %}condition={{ condition }}&{% endfor %}{% for category in categories_chosen %}category={{ category }}&{% endfor %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}page=1">
+									&laquo; First
+								</a>
+								<div></div>
+								<a class="bg-[#000000] text-white text-center py-2 rounded block"
+								   href="?q={{ search_query }}&{% for condition in conditions_chosen %}condition={{ condition }}&{% endfor %}{% for category in categories_chosen %}category={{ category }}&{% endfor %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}page={{ page_obj.previous_page_number }}">
+									Previous
+								</a>
+							</div>
+							{% else %}
+							<div></div>
+							{% endif %}
+	
+							<span class="current text-center">
+								Page {{ page_obj.number }} out of {{ page_obj.paginator.num_pages }}
+							</span>
+	
+							{% if page_obj.has_next %}
+							<div class="grid grid-cols-3">
+								<a class="bg-[#000000] text-white text-center py-2 rounded block"
+								   href="?q={{ search_query }}&{% for condition in conditions_chosen %}condition={{ condition }}&{% endfor %}{% for category in categories_chosen %}category={{ category }}&{% endfor %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}page={{ page_obj.next_page_number }}">
+									Next
+								</a>
+								<div></div>
+								<a class="bg-[#000000] text-white text-center py-2 rounded block"
+								   href="?q={{ search_query }}&{% for condition in conditions_chosen %}condition={{ condition }}&{% endfor %}{% for category in categories_chosen %}category={{ category }}&{% endfor %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}page={{ page_obj.paginator.num_pages }}">
+									Last &raquo;
+								</a>
+							</div>
+							{% endif %}
 						</div>
 					</div>
-					{% endfor %}
-
+	
+					{% endif %}
+	
 				</div>
-
-				{% if posts_count != 0 %}<div class="pagination">
-					<div class="step-links grid grid-cols-3 items-center">
-						{% if page_obj.has_previous %}
-						<div class="grid grid-cols-3">
-							<a class="bg-[#FFBA24] text-center py-2 rounded block"
-								href="?q={{ search_query }}&{% for condition in conditions_chosen %}condition={{ condition }}&{% endfor %}{% for category in categories_chosen %}category={{ category }}&{% endfor %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}page=1">
-								&laquo; First
-							</a>
-							<div></div>
-							<a class="bg-[#FFBA24] text-center py-2 rounded block"
-								href="?q={{ search_query }}&{% for condition in conditions_chosen %}condition={{ condition }}&{% endfor %}{% for category in categories_chosen %}category={{ category }}&{% endfor %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}page={{ page_obj.previous_page_number }}">
-								Previous
-							</a>
-						</div>
-						{% else %}
-						<div></div>
-						{% endif %}
-
-						<span class="current text-center">
-							Page {{ page_obj.number }} out of {{ page_obj.paginator.num_pages }}
-						</span>
-
-						{% if page_obj.has_next %}
-						<div class="grid grid-cols-3">
-							<a class="bg-[#FFBA24] text-center py-2 rounded block"
-								href="?q={{ search_query }}&{% for condition in conditions_chosen %}condition={{ condition }}&{% endfor %}{% for category in categories_chosen %}category={{ category }}&{% endfor %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}page={{ page_obj.next_page_number }}">
-								Next
-							</a>
-							<div></div>
-							<a class="bg-[#FFBA24] text-center py-2 rounded block"
-								href="?q={{ search_query }}&{% for condition in conditions_chosen %}condition={{ condition }}&{% endfor %}{% for category in categories_chosen %}category={{ category }}&{% endfor %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}page={{ page_obj.paginator.num_pages }}">
-								Last &raquo;
-							</a>
-						</div>
-						{% endif %}
-					</div>
-				</div>
-
-				{% endif %}
-
 			</div>
-
-		</div>
 	</div>
-</div>
 
 
 
@@ -277,5 +341,16 @@
 
 	});
 
+</script>
+
+<script>
+	function changeFilter() {
+	var x = document.getElementById("aside");
+	if (x.style.display === "flex") {
+		x.style.display = "none";
+	} else {
+		x.style.display = "flex";
+	}
+	}
 </script>
 {% endblock externals %}

@@ -26,7 +26,7 @@
 	</style>
 </head>
 
-<body class="text-black font-inter">
+<body class="text-black font-inter relative">
 	{% include 'app/header.html' %}
 	{% if messages %}
 	<ul class="messages">
@@ -35,8 +35,10 @@
 			{% endfor %}
 	</ul>
 	{% endif %}
-	{% block content %} {% endblock %}
-	{% include 'app/footer.html' %}
+	<div class="container mx-auto px-4">
+		{% block content %} {% endblock %}
+	</div>
+	<!-- {% include 'app/footer.html' %} -->
 	<script>
 		const redirectTo = (id) => {
 			window.location.href = `/details/${id}`;

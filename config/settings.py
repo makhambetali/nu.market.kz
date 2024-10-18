@@ -91,11 +91,17 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.sqlite3',
+#             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#         }
+#     }
 
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "market",
+        "NAME": "postgres",
         "USER": "postgres",
         "PASSWORD": "123",
         "HOST": "localhost",
@@ -144,7 +150,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 STATIC_URL = '/static/'
 
-# Путь для глобальных статических файлов
+# # Путь для глобальных статических файлов
 STATICFILES_DIRS = [
     BASE_DIR / 'static',  # Путь к директории с глобальными статическими файлами
 ]
@@ -172,7 +178,7 @@ LOGIN_URL = 'users:login'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
-    'users.authentication.EmailAuthBackend',
+    'src.users.authentication.EmailAuthBackend',
 ]
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"

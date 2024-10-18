@@ -1,5 +1,7 @@
-{% extends 'app/base.html' %} {% block content %}
-<section class="container mx-auto px-4">
+{% extends 'app/base.html' %} 
+{% load static %}
+{% load custom_tag %}
+{% block content %}
 	<div class="grid grid-cols-12 gap-x-5 py-4">
 		<!-- Image -->
 		<div class="flex col-span-6 gap-x-3">				
@@ -36,9 +38,34 @@
 				</a>
 			</div>
 		</div>
+		</div>
+		<div class="py-6 text-4xl font-bold">Related Posts</div>
+		<div class="col-span-12 grid grid-cols-4 gap-x-5">
+			{% for post in related_posts %}
+			<div class="bg-white card cursor-pointer flex flex-col">
+				{% has_image post.images.first.image.url as post_image %}
+							
+							<img src="{{post_image}}" alt="Product Image"
+								onclick="redirectTo('{{post.slug}}')" class="aspect-[1/1] object-cover rounded-2xl mb-4" />
+				<span class="hover:underline text-lg mb-2">
+					{{post.title}}</span>
 
-	</div>
-</section>
+				<div class="flex text-2xl font-bold justify-between items-center mb-2">
+					<div class="flex">
+						<span>₸</span>
+						<p class="currency-text">{{post.price}}</p>
+					</div>
+				</div>
+
+				<div class="flex justify-between text-xs text-gray-600">
+					<span class="created_at" date_input='{{post.created_at.date|date:"Y-m-d"}}'
+						date_input_alternative='{{post.created_at.date}}' time="{{post.created_at.time}}">
+					</span>
+					<span>Block {{post.block}}</span>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
 {% endblock content %}
 {% block externals %}
 <script>
