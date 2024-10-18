@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+<<<<<<< HEAD
       <module fileurl="file://$PROJECT_DIR$/.idea/nu.market.kz-main.iml" filepath="$PROJECT_DIR$/.idea/nu.market.kz-main.iml" />
+=======
+      <module fileurl="file://$PROJECT_DIR$/.idea/nu.market.kz.iml" filepath="$PROJECT_DIR$/.idea/nu.market.kz.iml" />
+>>>>>>> f6c0bccf07123e2067e2d64b8baf54b2a46f5987
     </modules>
   </component>
 </project>
