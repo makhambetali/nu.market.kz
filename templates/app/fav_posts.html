@@ -1,15 +1,14 @@
 {% extends 'app/base.html' %} 
 {% load static %}
 {% load custom_tag %}{% block content %}
-	<!-- <h2 class="text-3xl font-bold mb-8 text-center">Your Liked Items</h2> -->
+	<!-- <h2 class="mb-8 text-3xl font-bold text-center">Your Liked Items</h2> -->
 	<div class="py-6 text-4xl font-bold">Liked Posts</div>
-	<div class="grid grid-cols-12 gap-x-5 pb-6">
+	<div class="grid grid-cols-12 pb-6 gap-x-5">
 		<!-- Product Listings Section -->
-		 lo
-		{% if fav_posts.length != 0 %}
-		<div class="col-span-7 flex flex-col gap-y-6 border py-5 rounded-2xl px-6 divide-y first:pt-0">
+		{% if fav_posts %}
+		<div class="flex flex-col col-span-7 px-6 py-5 border divide-y gap-y-6 rounded-2xl first:pt-0">
 			{% for fav_post in fav_posts %}
-			<div class="card flex gap-x-4 pt-6" post_slug="{{fav_post.post.slug}}"
+			<div class="flex pt-6 card gap-x-4" post_slug="{{fav_post.post.slug}}"
 				onclick="redirectTo('{{fav_post.post.slug}}')">
 				{% has_image fav_post.post.images.first.image.url as post_image %}
 							
@@ -21,7 +20,7 @@
 							<p class="text-xl font-bold">
 								{{fav_post.post.title}}
 							</p>
-							<p class="text-gray-600 text-sm">
+							<p class="text-sm text-gray-600">
 								{{fav_post.post.content|slice:":50"}}
 							</p>
 						</div>
@@ -42,7 +41,7 @@
 			{% endfor %}
 		</div>
 		{% else %}
-		<div class="col-span-full h-screen flex justify-center items-center">
+		<div class="flex items-center justify-center h-screen col-span-full">
 			<div class="flex flex-col items-center">
 				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-12">
 					<path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />

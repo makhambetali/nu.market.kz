@@ -10,6 +10,7 @@ module.exports = {
 		/**
 		 * HTML. Paths to Django template files that will contain Tailwind CSS classes.
 		 */
+		"./node_modules/flowbite/**/*.js",
 
 		/*  Templates within theme app (<tailwind_app_name>/templates), e.g. base.html. */
 		"../templates/**/*.html",
@@ -56,6 +57,7 @@ module.exports = {
 		 * for forms. If you don't like it or have own styling for forms,
 		 * comment the line below to disable '@tailwindcss/forms'.
 		 */
+		require('flowbite/plugin'),
 		require("@tailwindcss/forms"),
 		require("@tailwindcss/typography"),
 		require("@tailwindcss/aspect-ratio"),

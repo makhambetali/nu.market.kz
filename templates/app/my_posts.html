@@ -1,21 +1,20 @@
 {% extends 'app/base.html' %} {% block content %}
-<<<<<<< HEAD
-=======
-
-<div class="container mx-auto lg:px-16 px-4">
->>>>>>> f6c0bccf07123e2067e2d64b8baf54b2a46f5987
 			<div class="flex flex-col py-4">
+				<div class="flex pb-4 mx-auto gap-x-2">
+					<button type="button" class="px-6 py-3 border-b-2 focus:border-[#000]">Active</button>
+					<button type="button" class="px-6 py-3 border-b-2 focus:border-[#000]">Inactive</button>
+				</div>
 				<!-- Product Card -->
 				<div class="grid lg:gap-x-5 gap-x-4 lg:gap-y-9 gap-y-6 lg:grid-cols-4">
 					{% for post in posts %}
-
-					<div class="bg-white card cursor-pointer flex flex-col">
-						<img src="{{post.images.first.image.url}}" alt="Product Image"
-							onclick="redirectTo('{{post.slug}}')" class="aspect-[1/1] object-cover rounded-2xl mb-4" />
-						<span class="hover:underline text-lg mb-2">
+			
+					<div class="flex flex-col bg-white cursor-pointer card">
+						<img src="{{post.images.first.image.url}}" alt="Product Image" onclick="redirectTo('{{post.slug}}')"
+							class="aspect-[1/1] object-cover rounded-2xl mb-4" />
+						<span class="mb-2 text-lg hover:underline">
 							{{post.title}}</span>
-
-						<div class="flex text-2xl font-bold justify-between">
+			
+						<div class="flex justify-between text-2xl font-bold">
 							<div class="flex">
 								<span>₸</span>
 								<p class="currency-text">{{post.price}}</p>
@@ -23,13 +22,9 @@
 						</div>
 					</div>
 					{% endfor %}
-
+			
 				</div>
 			</div>
-<<<<<<< HEAD
-=======
-</div>
->>>>>>> f6c0bccf07123e2067e2d64b8baf54b2a46f5987
 
 {% endblock content %} {% block externals %}
 <script>

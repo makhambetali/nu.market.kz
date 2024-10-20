@@ -5,9 +5,9 @@
 {% block content %}
 =======
 {% extends 'app/base.html' %} {% block content %}
-<section class="container mx-auto px-4">
+<section class="container px-4 mx-auto">
 >>>>>>> f6c0bccf07123e2067e2d64b8baf54b2a46f5987
-	<div class="grid grid-cols-12 gap-x-5 py-4">
+	<div class="grid grid-cols-12 py-4 gap-x-5">
 		<!-- Image -->
 		<div class="flex col-span-6 gap-x-3">				
 			<img src="/media/{{post.images.first.image}}" alt="" class="rounded-2xl"/>
@@ -23,7 +23,7 @@
 			<!-- Category -->
 			<div class="mb-4">
 				<span
-					class="inline-block rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-blue-800">Category:
+					class="inline-block px-2 py-1 text-xs font-semibold tracking-wide text-blue-800 uppercase bg-blue-100 rounded-full">Category:
 					{{post.category}}</span>
 			</div>
 			
@@ -37,7 +37,7 @@
 
 			<!-- Contact Seller Button -->
 			<div>
-				<a class="rounded-lg bg-blue-600 px-6 py-3 font-bold text-white"
+				<a class="px-6 py-3 font-bold text-white bg-blue-600 rounded-lg"
 					href="{% url 'messenger:private-chat' request.user.username post.creator.username%}">
 					Contact Seller
 				</a>
@@ -46,17 +46,17 @@
 <<<<<<< HEAD
 		</div>
 		<div class="py-6 text-4xl font-bold">Related Posts</div>
-		<div class="col-span-12 grid grid-cols-4 gap-x-5">
+		<div class="grid grid-cols-4 col-span-12 gap-x-5">
 			{% for post in related_posts %}
-			<div class="bg-white card cursor-pointer flex flex-col">
+			<div class="flex flex-col bg-white cursor-pointer card">
 				{% has_image post.images.first.image.url as post_image %}
 							
 							<img src="{{post_image}}" alt="Product Image"
 								onclick="redirectTo('{{post.slug}}')" class="aspect-[1/1] object-cover rounded-2xl mb-4" />
-				<span class="hover:underline text-lg mb-2">
+				<span class="mb-2 text-lg hover:underline">
 					{{post.title}}</span>
 
-				<div class="flex text-2xl font-bold justify-between items-center mb-2">
+				<div class="flex items-center justify-between mb-2 text-2xl font-bold">
 					<div class="flex">
 						<span>₸</span>
 						<p class="currency-text">{{post.price}}</p>

@@ -33,7 +33,7 @@ class HomeMixin(ListView):
     model = Post
     template_name = 'app/home.html'
     context_object_name = 'posts'
-    paginate_by = 3
+    paginate_by = 12
 
 
 class HomePageView(HomeMixin):

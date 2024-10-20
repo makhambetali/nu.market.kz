@@ -4,11 +4,11 @@
 	<!-- Contacts List -->
 	<div class="grid grid-cols-12 my-6">
 		<div class="col-span-3 border rounded-s-2xl">
-			<div class="text-xl px-4 py-3">
-				<form class="flex-1 relative lg:flex hidden" method="get" action="{% url 'app:home-page-filter' %}"
+			<div class="px-4 py-3 text-xl">
+				<form class="relative flex-1 hidden lg:flex" method="get" action="{% url 'app:home-page-filter' %}"
 					id="search-form">
-					<div class="absolute inset-y-0 start-0 flex items-center ps-4 pointer-events-none">
-						<svg class="size-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+					<div class="absolute inset-y-0 flex items-center pointer-events-none start-0 ps-4">
+						<svg class="text-gray-500 size-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
 							viewBox="0 0 20 20">
 							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
 								d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
@@ -29,9 +29,9 @@
 					<a href="{% url 'messenger:private-chat' user1=request.user.username user2=user.username %}"
 						class="flex items-center justify-start px-4 py-3 gap-x-3 hover:bg-gray-200 {% if receiver and receiver.id == user.id %}bg-gray-300{% endif %}">
 						<img src="/media/{{user.profile.image}}" alt=""
-							class="size-12 rounded-full object-cover flex-shrink-0 bg-gray-400" />
+							class="flex-shrink-0 object-cover bg-gray-400 rounded-full size-12" />
 						<div class="w-full">
-							<p class="font-bold text-gray-700 mb-1">
+							<p class="mb-1 font-bold text-gray-700">
 								{{ user.username }}
 							</p>
 							<p class="text-sm text-gray-500">Last message...</p>
@@ -46,9 +46,9 @@
 		<div class="bg-white col-span-9 flex flex-col border !border-l-0 rounded-e-2xl">
 			{% if receiver %}
 				<!-- Chat Header -->
-				<div class="flex h-16 items-center border-b px-4 gap-x-4">
+				<div class="flex items-center h-16 px-4 border-b gap-x-4">
 					<img src="/media/{{receiver.profile.image}}" alt="{{ receiver.username }}"
-						class="size-10 rounded-full object-cover" />
+						class="object-cover rounded-full size-10" />
 					<div>
 						<h3 class="text-xl font-bold">{{ receiver.username }}</h3>
 						<p class="text-sm text-gray-600">Online</p>
@@ -90,7 +90,7 @@
 					</div>
 				</div>
 			{% else %}
-			<div class="h-screen flex justify-center items-center">
+			<div class="flex items-center justify-center h-screen">
 				<span class="text-[#666666]">
 					Выберите пользователя слева для начала переписки
 				</span>
