@@ -23,9 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-axettocg=3*#(g1kng@^5)*6mvy*kmgg_f+!q)%=bkb(=-n38^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['192.168.0.184', '127.0.0.1']
+
+ALLOWED_HOSTS = ['192.168.0.184', '127.0.0.1', 'makhambetali-website.kz']
 
 
 # Application definition
@@ -98,14 +99,24 @@ WSGI_APPLICATION = 'config.wsgi.application'
 #         }
 #     }
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "postgres",
+#         "USER": "postgres",
+#         "PASSWORD": "123",
+#         "HOST": "localhost",
+#         "PORT": "5432",
+#     }
+# }
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "postgres",
-        "USER": "postgres",
-        "PASSWORD": "123",
-        "HOST": "localhost",
-        "PORT": "5432",
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',  # Или 'django.db.backends.postgresql'
+        'NAME': 'makhamb1_db',
+        'USER': 'makhamb1_postgre',
+        'PASSWORD': 'nu.market.2024',
+        'HOST': 'srv-db-pgsql01.ps.kz',
+        'PORT': '5432',  # Например, 3306 для MySQL или 5432 для PostgreSQL
     }
 }
 
@@ -148,15 +159,17 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
-STATIC_URL = '/static/'
 
 # # Путь для глобальных статических файлов
+
+# Директория для сборки всех статических файлов при выполнении команды collectstatic
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',  # Путь к директории с глобальными статическими файлами
 ]
 
-# Директория для сборки всех статических файлов при выполнении команды collectstatic
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 MEDIA_URL = '/media/'
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static')
